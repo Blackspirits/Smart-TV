@@ -229,7 +229,7 @@ export const FriendProfileView = ({userId, name, onOpen, onBack, onSelectItem}) 
 			)}
 			{confirm === 'block' && (
 				<ConfirmBox
-					message={(blocked ? $L('Unblock {name}?') : $L('Block {name}? Neither of you will be able to message the other directly. Group chats you share stay open.')).replace('{name}', shownName)}
+					message={(blocked ? $L('Unblock {name}?') : $L('Block {name}? Neither of you will be able to send direct messages to the other. Shared group chats remain available.')).replace('{name}', shownName)}
 					confirmLabel={blocked ? $L('Unblock') : $L('Block')}
 					onConfirm={toggleBlock}
 					onCancel={() => setConfirm(null)}
@@ -783,7 +783,7 @@ export const GroupInfoView = ({conversationId, onOpen, onBack}) => {
 						{memberMenu === memberId && (
 							<div className={settingsCss.actionBarInline}>
 								<ActionButton
-									label={group.isAdmin(memberId) ? $L('Remove admin') : $L('Make admin')}
+									label={group.isAdmin(memberId) ? $L('Revoke admin role') : $L('Make admin')}
 									spotlightId={`member-${memberId}-admin`}
 									onClick={() => {
 										setMemberMenu(null);

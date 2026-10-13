@@ -267,7 +267,7 @@ export const formatDirectPlayReason = (detail, settings = {}) => {
 		return {
 			description: $L('Audio codec ({codec}) is not supported directly.').replace('{codec}', codec),
 			hint: passthrough === 'disabled' || passthrough === 'auto'
-				? $L('Tip: If your audio receiver or soundbar supports {codec}, enable Audio Passthrough in Audio Preferences.').replace('{codec}', codec)
+				? $L('Tip: If your audio receiver or soundbar supports {codec}, set \'Passthrough\' to Auto or Manual in Playback > Audio.').replace('{codec}', codec)
 				: null
 		};
 	}
@@ -277,7 +277,7 @@ export const formatDirectPlayReason = (detail, settings = {}) => {
 			description: detail.audioChannels != null
 				? $L('Audio channel count ({channels}ch) exceeds the player limit.').replace('{channels}', detail.audioChannels)
 				: $L('Number of audio channels is not supported.'),
-			hint: $L('Tip: Adjust \'Max Audio Channels\' or multichannel downmixing in Audio Preferences.')
+			hint: $L('Tip: Adjust \'Max Audio Channels\' or \'Downmix to Stereo\' in Playback > Audio.')
 		};
 	}
 
@@ -287,7 +287,7 @@ export const formatDirectPlayReason = (detail, settings = {}) => {
 			return settings.assDirectPlay === false
 				? {
 					description: $L('ASS/SSA subtitles require transcoding because direct play is turned off.'),
-					hint: $L('Tip: Enable \'Direct play ASS/SSA subtitles\' in Subtitle Preferences to play directly without transcoding.')
+					hint: $L('Tip: Enable \'ASS/SSA Direct Play\' in Playback > Subtitles to play directly without transcoding.')
 				}
 				: {description: $L('Subtitle format ({codec}) is not supported directly and must be burned in.').replace('{codec}', codec)};
 		}
@@ -295,7 +295,7 @@ export const formatDirectPlayReason = (detail, settings = {}) => {
 			return settings.enablePgsRendering === false
 				? {
 					description: $L('PGS subtitles require transcoding because direct play is turned off.'),
-					hint: $L('Tip: Enable \'Direct play PGS subtitles\' in Subtitle Preferences to play directly without transcoding.')
+					hint: $L('Tip: Enable \'PGS Direct Play\' in Playback > Subtitles to play directly without transcoding.')
 				}
 				: {description: $L('Subtitle format ({codec}) is not supported directly and must be burned in.').replace('{codec}', 'PGS')};
 		}
@@ -309,7 +309,7 @@ export const formatDirectPlayReason = (detail, settings = {}) => {
 	if (key === 'audiobitratenotsupported' || key === 'audiobitrateexceedslimit') {
 		return {
 			description: $L('Audio bitrate exceeds streaming limit.'),
-			hint: $L('Tip: Increase \'Max Streaming Bitrate\' in Video Playback Preferences to allow direct streaming.')
+			hint: $L('Tip: Increase \'Max Streaming Bitrate\' in Playback > Quality & Decoding to allow direct streaming.')
 		};
 	}
 
@@ -326,7 +326,7 @@ export const formatDirectPlayReason = (detail, settings = {}) => {
 		}
 		return {
 			description,
-			hint: $L('Tip: Increase \'Max Streaming Bitrate\' in Video Playback Preferences to allow direct streaming.')
+			hint: $L('Tip: Increase \'Max Streaming Bitrate\' in Playback > Quality & Decoding to allow direct streaming.')
 		};
 	}
 

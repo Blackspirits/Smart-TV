@@ -549,3 +549,17 @@ describe('the profile push queue', () => {
 		]);
 	});
 });
+
+describe('Portuguese UI language profile compatibility', () => {
+ test('imports the old generic preference as Portugal', () => {
+  expect(profileToLocal({languageOverride:'pt'}).uiLanguage).toBe('pt-PT');
+ });
+ test('preserves Brazil and exports canonical locale tags', () => {
+  expect(profileToLocal({languageOverride:'pt_BR'}).uiLanguage).toBe('pt-BR');
+  expect(localToProfile({...defaultSettings,uiLanguage:'pt'}).languageOverride).toBe('pt-PT');
+  expect(localToProfile({...defaultSettings,uiLanguage:'pt_BR'}).languageOverride).toBe('pt-BR');
+ });
+ test('Core automatic language does not erase this TV choice', () => {
+  expect(profileToLocal({languageOverride:'system'}).uiLanguage).toBeUndefined();
+ });
+});

@@ -123,7 +123,7 @@ describe('formatDirectPlayReason', () => {
 		const reason = {reason: 'AudioCodecNotSupported', codec: 'truehd'};
 		expect(formatDirectPlayReason(reason, {audioPassthroughMode: 'auto'})).toEqual({
 			description: 'Audio codec (TRUEHD) is not supported directly.',
-			hint: 'Tip: If your audio receiver or soundbar supports TRUEHD, enable Audio Passthrough in Audio Preferences.'
+			hint: 'Tip: If your audio receiver or soundbar supports TRUEHD, set \'Passthrough\' to Auto or Manual in Playback > Audio.'
 		});
 		expect(formatDirectPlayReason(reason, {audioPassthroughMode: 'manual'}).hint).toBeNull();
 	});
@@ -135,7 +135,7 @@ describe('formatDirectPlayReason', () => {
 
 	test('points a styled subtitle at its setting only while that setting is off', () => {
 		expect(formatDirectPlayReason({reason: 'SubtitleCodecNotSupported', codec: 'ass'}, {assDirectPlay: false}).hint)
-			.toBe('Tip: Enable \'Direct play ASS/SSA subtitles\' in Subtitle Preferences to play directly without transcoding.');
+			.toBe('Tip: Enable \'ASS/SSA Direct Play\' in Playback > Subtitles to play directly without transcoding.');
 		expect(formatDirectPlayReason({reason: 'SubtitleCodecNotSupported', codec: 'ass'}, {assDirectPlay: true})).toEqual({
 			description: 'Subtitle format (ASS) is not supported directly and must be burned in.'
 		});
@@ -147,7 +147,7 @@ describe('formatDirectPlayReason', () => {
 		['VideoBitrateExceedsLimit', 'ContainerBitrateExceedsLimit', 'VideoBitrateNotSupported'].forEach((reason) => {
 			expect(formatDirectPlayReason({reason, sourceBitrate: 25000000, maxStreamingBitrate: 10000000})).toEqual({
 				description: 'File bitrate (25.0 Mbps) exceeds the configured streaming limit (10.0 Mbps).',
-				hint: 'Tip: Increase \'Max Streaming Bitrate\' in Video Playback Preferences to allow direct streaming.'
+				hint: 'Tip: Increase \'Max Streaming Bitrate\' in Playback > Quality & Decoding to allow direct streaming.'
 			});
 		});
 	});
@@ -173,7 +173,7 @@ describe('buildDirectPlayReasonItems', () => {
 		});
 		expect(items).toEqual([{
 			description: 'Audio codec (DTS) is not supported directly.',
-			hint: 'Tip: If your audio receiver or soundbar supports DTS, enable Audio Passthrough in Audio Preferences.'
+			hint: 'Tip: If your audio receiver or soundbar supports DTS, set \'Passthrough\' to Auto or Manual in Playback > Audio.'
 		}]);
 	});
 });

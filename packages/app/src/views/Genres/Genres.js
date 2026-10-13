@@ -26,7 +26,7 @@ const SORT_OPTIONS = [
 	{key: 'name-asc', label: $L('Name (A-Z)')},
 	{key: 'name-desc', label: $L('Name (Z-A)')},
 	{key: 'count-desc', label: $L('Most Items')},
-	{key: 'count-asc', label: $L('Least Items')},
+	{key: 'count-asc', label: $L('Fewest Items')},
 	{key: 'random', label: $L('Random')}
 ];
 

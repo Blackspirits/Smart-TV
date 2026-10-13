@@ -82,7 +82,7 @@ const PlaylistScreen = ({
 				</SpottableDiv>
 			</HorizontalContainer>
 
-			<p className={css.playlistHint}>{$L('◀ ▶ to re-order · DEL to remove')}</p>
+			<p className={css.playlistHint}>{$L('◀ ▶ to reorder · DEL to remove')}</p>
 
 			<div className={`${css.trackList} ${css.playlistItemsList}`} onKeyDown={onItemKeyDown} {...menuHold}>
 				{playlistItems.map((plItem, idx) => {

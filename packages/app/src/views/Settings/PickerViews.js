@@ -81,13 +81,13 @@ export const BlockedRatingsView = ({ratings, blocked, loading, loadFailed, onTog
 	return (
 		<SettingsView spotlightId='blocked-ratings-view' title={$L('Parental Controls')} clean>
 			<div className={css.editorLead}>{$L('Block content with the following ratings:')}</div>
-			<div className={`${css.editorHint} ${css.editorHintClean}`}>{$L('Blocking a rating also blocks everything stronger than it.')}</div>
+			<div className={`${css.editorHint} ${css.editorHintClean}`}>{$L('Blocking an age rating also blocks all higher age ratings.')}</div>
 			{loading && <div className={css.viewSpinner}><LoadingSpinner /></div>}
 			{!loading && ratings.length === 0 && (
 				<div className={css.viewDescription}>
 					{loadFailed
 						? $L('Could not load server ratings. Showing saved ratings only.')
-						: $L('No content ratings were found on this server yet.')}
+						: $L('No content ratings have been found on this server yet.')}
 				</div>
 			)}
 			{!loading && ratings.length > 0 && loadFailed && (
@@ -97,7 +97,7 @@ export const BlockedRatingsView = ({ratings, blocked, loading, loadFailed, onTog
 			{!loading && ranked.map((rating) => (
 				<BlockedRatingRow key={rating} rating={rating} isBlocked={blocked.includes(rating)} onToggleRating={onToggleRating} />
 			))}
-			{!loading && unranked.length > 0 && <SectionTitle>{$L('Only blocks itself')}</SectionTitle>}
+			{!loading && unranked.length > 0 && <SectionTitle>{$L('Blocks only this rating')}</SectionTitle>}
 			{!loading && unranked.map((rating) => (
 				<BlockedRatingRow key={rating} rating={rating} isBlocked={blocked.includes(rating)} onToggleRating={onToggleRating} />
 			))}

@@ -8,6 +8,7 @@ import fs from 'fs';
 import path from 'path';
 
 import {getUiLanguageOptions} from './settingsOptions';
+import {INTERNAL_UI_LOCALES} from '../../utils/uiLocale';
 
 // The language picker, the ilib manifest, the enact locale list and the folders on disk
 // all have to name the same set. Any one of them drifting leaves a language that is
@@ -31,14 +32,14 @@ describe('ui language options', () => {
 		const onDisk = fs.readdirSync(RESOURCES, {withFileTypes: true})
 			.filter((entry) => entry.isDirectory() && fs.existsSync(path.join(RESOURCES, entry.name, 'strings.json')))
 			.map((entry) => entry.name);
-		expect(onDisk.sort()).toEqual([...translated].sort());
+		expect(onDisk.sort()).toEqual([...translated, ...INTERNAL_UI_LOCALES].sort());
 	});
 
 	test('the ilib manifest and the enact locale list match the picker', () => {
-		expect([...manifest.locales].sort()).toEqual([...offered].sort());
-		expect([...appPkg.enact.locales].sort()).toEqual([...offered].sort());
+		expect([...manifest.locales].sort()).toEqual([...offered, ...INTERNAL_UI_LOCALES].sort());
+		expect([...appPkg.enact.locales].sort()).toEqual([...offered, ...INTERNAL_UI_LOCALES].sort());
 		expect([...manifest.files].sort()).toEqual(
-			['strings.json', ...translated.map((value) => `${value}/strings.json`)].sort()
+			['strings.json', ...[...translated, ...INTERNAL_UI_LOCALES].map((value) => `${value}/strings.json`)].sort()
 		);
 	});
 

@@ -56,7 +56,7 @@ const useSeerrAccount = ({seerr, seerrLabel, settings, updateSetting, serverUrl,
 				if (result.authenticated) {
 					setMoonfinStatus($L('Connected via Moonfin!'));
 				} else {
-					setMoonfinStatus($L('Moonfin plugin found but no session. Please log in.'));
+					setMoonfinStatus($L('The Moonfin plugin was found, but you are not signed in. Please sign in.'));
 				}
 			} catch (err) {
 				setMoonfinStatus(`${$L('Moonfin connection failed:')} ${err.message}`);
@@ -84,7 +84,7 @@ const useSeerrAccount = ({seerr, seerrLabel, settings, updateSetting, serverUrl,
 		const username = seerrUsername.trim();
 		if (!username) {
 			setSeerrAuthMessage('');
-			setSeerrAuthError($L('Enter username/email.'));
+			setSeerrAuthError($L('Enter your username or email address.'));
 			return;
 		}
 
@@ -124,7 +124,7 @@ const useSeerrAccount = ({seerr, seerrLabel, settings, updateSetting, serverUrl,
 			await seerr.logout();
 			setSeerrPassword('');
 			setSeerrAuthMessage($L('Signed out from {seerrLabel}.').replace('{seerrLabel}', seerrLabel));
-			setMoonfinStatus($L('Moonfin plugin found but no session. Please log in.'));
+			setMoonfinStatus($L('The Moonfin plugin was found, but you are not signed in. Please sign in.'));
 		} catch (err) {
 			const message = typeof err?.message === 'string' && err.message.trim()
 				? err.message.trim()

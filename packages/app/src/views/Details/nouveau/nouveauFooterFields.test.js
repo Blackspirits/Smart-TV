@@ -37,7 +37,7 @@ describe('videoLines', () => {
 describe('fileSizeLine', () => {
 	it('names the size and the container together', () => {
 		expect(fileSizeLine({Size: 700 * MB, Container: 'mkv'}))
-			.toBe('Size: 700 MB  •  Format: MKV');
+			.toBe('Size: 700 MB • Format: MKV');
 	});
 
 	it('says nothing when it only has half of it', () => {

@@ -3,7 +3,7 @@ import $L from '@enact/i18n/$L';
 // Moonbase names the holiday by id, so the row title is built here on every draw.
 export const seasonalTitle = (holiday) => {
 	switch (holiday) {
-		case 'newYear': return $L("New Year's");
+		case 'newYear': return $L("New Year");
 		case 'valentines': return $L("Valentine's Day");
 		case 'easter': return $L('Easter');
 		case 'pride': return $L('Pride');

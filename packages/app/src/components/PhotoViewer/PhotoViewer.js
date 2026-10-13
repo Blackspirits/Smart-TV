@@ -155,7 +155,7 @@ const PhotoViewer = ({item, items, serverUrl, onClose}) => {
 					{formattedDate && <div className={css.photoDate}>{formattedDate}</div>}
 					{dimensions && <div className={css.photoMeta}>{dimensions}</div>}
 					{photoItems.length > 1 && (
-					<div className={css.navHint}>{$L('◀ ▶ Navigate')} &nbsp; {$L('OK Toggle info')} &nbsp; {$L('Back Close')}</div>
+					<div className={css.navHint}>{$L('◀ ▶ Navigate')} &nbsp; {$L('OK: Toggle Info')} &nbsp; {$L('Back: Close')}</div>
 					)}
 				</div>
 			</div>

@@ -24,7 +24,7 @@ export const nouveauMetaPieces = ({item, year, officialRating, runtime, endsAt, 
 	add(officialRating);
 
 	if (item.Type === 'Series' && seasonCount) {
-		add($L('{count} Seasons').replace('{count}', seasonCount));
+		add($L('{count} seasons').replace('{count}', seasonCount));
 	}
 	if (item.Type === 'Season' && episodeCount) {
 		add($L('{count} Episodes').replace('{count}', episodeCount));

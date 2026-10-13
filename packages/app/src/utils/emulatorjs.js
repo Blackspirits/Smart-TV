@@ -188,7 +188,7 @@ export const unsupportedMessage = () => {
 			? $L('This TV runs Tizen {version}. Games require Tizen 5 or newer.').replace('{version}', version)
 			: $L('Games require Tizen 5 or newer.');
 	}
-	return $L('Games require webOS 5 or Tizen 5 and newer.');
+	return $L('Games require webOS 5 or later, or Tizen 5 or later.');
 };
 
 // The core needs a modern WebView. Older ones fail to parse it and EJS_ready never fires,

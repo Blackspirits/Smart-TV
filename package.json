@@ -8,6 +8,7 @@
 	"//build": "Append -- <version> to bump before building (npm run build:webos -- 2.2.0)",
 	"scripts": {
 		"lint:css": "node scripts/check-legacy-css.js",
+		"sync:portuguese": "node scripts/sync-portuguese-locale.js",
 		"build:webos": "cd packages/build-webos && node build.js",
 		"build:tizen": "cd packages/build-tizen && node scripts/build-wgt.js",
 		"build:tizen:all": "cd packages/build-tizen && node scripts/build-all.js",

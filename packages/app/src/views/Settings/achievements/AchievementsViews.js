@@ -155,15 +155,15 @@ const ScoreBank = ({bank}) => (
 const POWER_UP_TEXT = {
 	XpBoost: {
 		name: () => $L('XP Boost'),
-		body: () => $L('Doubles score for an hour. Using it again restarts the hour.')
+		body: () => $L('Double your points for one hour. Using it again restarts the one-hour timer.')
 	},
 	DoubleCredit: {
 		name: () => $L('Double Credit'),
-		body: () => $L('The next thing you finish counts twice towards badges.')
+		body: () => $L('The next item you finish counts twice toward badges.')
 	},
 	StreakFreeze: {
 		name: () => $L('Streak Freeze'),
-		body: () => $L('Covers one missed day. Only one can be banked.')
+		body: () => $L('Protects your streak for one missed day. You can hold only one.')
 	}
 };
 
@@ -267,7 +267,7 @@ const RankHeader = ({rank, summary, worn}) => {
 					<Chip icon="percent" label={`${summary.percentage.toFixed(1)}%`} />
 					<Chip
 						icon="local_fire_department"
-						label={$L('{days} day streak').replace('{days}', String(summary.currentWatchStreak))}
+						label={$L('{days}-day streak').replace('{days}', String(summary.currentWatchStreak))}
 					/>
 					<Chip
 						icon="emoji_events"
@@ -741,7 +741,7 @@ const CosmeticRow = ({item, worn, busy, onWear, onBuy}) => {
 				{!held && item.isEarned && (
 					<>
 						<div className={css.progressText}>
-							{$L('Earned at {score} lifetime score').replace('{score}', String(item.milestoneScore))}
+							{$L('Earned at {score} lifetime points').replace('{score}', String(item.milestoneScore))}
 						</div>
 						<div className={css.rowBar}>
 							<Bar value={Math.min(1, worn.lifetimeScore / item.milestoneScore)} color={ACCENT} slim />
@@ -767,7 +767,7 @@ export const AchievementsAppearanceView = ({onChanged}) => {
 
 	const buy = useCallback(async (item) => {
 		const result = await achievementsApi.buyShopItem(item.id);
-		if (result.outcome !== PURCHASE_BOUGHT) return result.message || $L('Could not buy that.');
+		if (result.outcome !== PURCHASE_BOUGHT) return result.message || $L('Could not complete the purchase.');
 		setWorn((prev) => boughtCosmetic(prev, item.id, result.bankAfter));
 		onChanged();
 		return null;
@@ -809,7 +809,7 @@ export const AchievementsAppearanceView = ({onChanged}) => {
 	if (cosmeticsAreEmpty(worn)) {
 		return (
 			<SettingsView spotlightId="achievements-appearance-view">
-				<Message>{$L('This server has no avatars or titles to wear.')}</Message>
+				<Message>{$L('This server has no avatars or profile titles available.')}</Message>
 			</SettingsView>
 		);
 	}
@@ -839,7 +839,7 @@ export const AchievementsAppearanceView = ({onChanged}) => {
 			<ConfirmSpendDialog
 				open={Boolean(asking)}
 				title={$L('Buy this?')}
-				body={$L('It comes straight out of your score bank.')}
+				body={$L('The cost is deducted from your points balance.')}
 				onCancel={cancel}
 				onConfirm={confirm}
 			/>
@@ -855,7 +855,7 @@ const statGroups = () => [
 		header: $L('Watched'),
 		rows: [
 			['TotalItemsWatched', $L('Items watched')],
-			['MoviesWatched', $L('Films watched')],
+			['MoviesWatched', $L('Movies watched')],
 			['SeriesCompleted', $L('Series finished')],
 			['TotalHoursWatched', $L('Hours watched')],
 			['DaysWatched', $L('Days watched')],
@@ -863,12 +863,12 @@ const statGroups = () => [
 		]
 	},
 	{
-		header: $L('Bests'),
+		header: $L('Personal bests'),
 		rows: [
 			['BestWatchStreak', $L('Best watch streak')],
 			['BestLoginStreak', $L('Best login streak')],
 			['MaxEpisodesInSingleDay', $L('Most episodes in a day')],
-			['MaxMoviesInSingleDay', $L('Most films in a day')],
+			['MaxMoviesInSingleDay', $L('Most movies in a day')],
 			['LongestItemMinutes', $L('Longest single item')],
 			['BestComboCount', $L('Best combo')]
 		]
@@ -876,7 +876,7 @@ const statGroups = () => [
 	{
 		header: $L('Habits'),
 		rows: [
-			['LateNightSessions', $L('Late night sessions')],
+			['LateNightSessions', $L('Late-night sessions')],
 			['EarlyMorningSessions', $L('Early morning sessions')],
 			['WeekendSessions', $L('Weekend sessions')],
 			['DaysLoggedIn', $L('Days signed in')]
@@ -950,7 +950,7 @@ const serverRows = (server) => [
 	['users', $L('Users'), String(server.users)],
 	['badges', $L('Badges unlocked'), String(server.badgesUnlocked)],
 	['items', $L('Items watched'), String(server.itemsWatched)],
-	['movies', $L('Films watched'), String(server.moviesWatched)],
+	['movies', $L('Movies watched'), String(server.moviesWatched)],
 	['series', $L('Series finished'), String(server.seriesCompleted)],
 	['score', $L('Score earned'), String(server.score)],
 	...(server.mostCommonBadge ? [['common-badge', $L('Most common badge'), server.mostCommonBadge]] : [])
@@ -1067,7 +1067,7 @@ export const AchievementsShopView = () => {
 
 	const buy = useCallback(async (item) => {
 		const result = await achievementsApi.buyShopItem(item.id);
-		if (result.outcome !== PURCHASE_BOUGHT) return result.message || $L('Could not buy that.');
+		if (result.outcome !== PURCHASE_BOUGHT) return result.message || $L('Could not complete the purchase.');
 		if (result.bankAfter !== null) setData((prev) => ({...prev, bank: result.bankAfter}));
 		return null;
 	}, [setData]);
@@ -1099,7 +1099,7 @@ export const AchievementsShopView = () => {
 			<ConfirmSpendDialog
 				open={Boolean(asking)}
 				title={$L('Buy this?')}
-				body={$L('It comes straight out of your score bank.')}
+				body={$L('The cost is deducted from your points balance.')}
 				onCancel={cancel}
 				onConfirm={confirm}
 			/>
@@ -1140,8 +1140,8 @@ const RerollRow = ({weekly, rerollsLeft = 0, busy, onReroll}) => {
 					{!spent
 						? $L('Swap this set for a different one')
 						: weekly
-							? $L('Used this week, comes back Monday UTC')
-							: $L('Used today, comes back at midnight UTC')}
+							? $L('Used this week; available again on Monday (UTC)')
+							: $L('Used today; available again at midnight UTC')}
 				</div>
 			</div>
 		</SpottableDiv>
@@ -1203,7 +1203,7 @@ export const AchievementsQuestsView = ({quests: initial}) => {
 			<ConfirmSpendDialog
 				open={Boolean(asking)}
 				title={$L('Reroll these quests?')}
-				body={$L('You get one daily and one weekly reroll, and this spends it.')}
+				body={$L('You can reroll daily quests once per day and weekly quests once per week. This uses the corresponding reroll.')}
 				onCancel={cancelReroll}
 				onConfirm={confirmReroll}
 			/>

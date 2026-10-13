@@ -1,3 +1,4 @@
+import {readBootUiLocale, uiLocaleChain} from '../utils/uiLocale';
 import {useState, useCallback, useEffect, useMemo, lazy, Suspense, useRef} from 'react';
 import {isKidsMode, blockedPanels, allowedPanel} from '../utils/kidsMode';
 import {
@@ -1937,7 +1938,7 @@ const AppContent = (props) => {
 			<DebugOverlay />
 			{connectionState !== 'connected' && isAuthenticated && (
 				<div className={css.connectionBanner}>
-					<span>{connectionState === 'reconnecting' ? $L('Reconnecting to server...') : $L('Lost connection to server')}</span>
+					<span>{connectionState === 'reconnecting' ? $L('Reconnecting to server...') : $L('Lost connection to the server')}</span>
 					{connectionState === 'disconnected' && (
 						<button className={css.retryButton} onClick={handleRetryConnection}>{$L('Retry')}</button>
 					)}
@@ -1957,16 +1958,7 @@ const AppContent = (props) => {
 	);
 };
 
-let storedLocale = 'en-US';
-try {
-	const bootLocale = localStorage.getItem('moonfin_uiLanguage');
-	if (bootLocale) {
-		storedLocale = bootLocale;
-	} else {
-		const stored = JSON.parse(localStorage.getItem('moonfin_settings') || '{}');
-		storedLocale = stored.uiLanguage || 'en-US';
-	}
-} catch (e) { /* use default */ }
+const storedLocale = readBootUiLocale(typeof localStorage === 'undefined' ? null : localStorage);
 
 // Pre-populate ilib.data with the locale strings so loadData() finds them cached
 // and skips synchronous XHR, which fails silently on Tizen. Only the locale the
@@ -1978,14 +1970,9 @@ const localeContext = require.context('../../resources', true, /^\.[\/][^/]+\/st
 // ilib merges root, then language, then language-region, so a regional locale
 // needs its base language loaded alongside it for anything the region file
 // leaves out.
-const localeChain = (locale) => {
-	const [language, region] = String(locale || '').split('-');
-	if (!language) return [];
-	return region ? [language, language + '-' + region] : [language];
-};
 
 export const localeStringsReady = Promise.all(
-	localeChain(storedLocale).map((dir) => {
+	uiLocaleChain(storedLocale).map((dir) => {
 		const key = './' + dir + '/strings.json';
 		if (localeContext.keys().indexOf(key) === -1) return null;
 		return localeContext(key).then((strings) => {

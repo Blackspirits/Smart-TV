@@ -232,7 +232,7 @@ export const ExternalCustomRowsView = ({
 							{refreshing ? $L('Refreshing...') : $L('Refresh All Enabled Lists')}
 						</div>
 						<div className={css.listItemCaption}>
-							{refreshMessage || $L('Fetch fresh items for every enabled list')}
+							{refreshMessage || $L('Refresh items in all enabled lists')}
 						</div>
 					</div>
 				</SpottableDiv>
@@ -265,7 +265,7 @@ export const ExternalCustomRowsView = ({
 				</div>
 			))}
 			<CycleRow
-				label={editingId ? $L('Editing Saved Row') : $L('Add By')}
+				label={editingId ? $L('Editing Saved Row') : $L('Add by Source')}
 				valueLabel={editingId ? $L('Changes apply to the row being edited') : (mode === 'url' ? $L('Pasted URL') : $L('Source and IDs'))}
 				onCycle={editingId ? undefined : () => onModeChange(mode === 'url' ? 'manual' : 'url')}
 				spotlightId='custom-row-mode'

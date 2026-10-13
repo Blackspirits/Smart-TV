@@ -210,7 +210,7 @@ const ModernDetailContent = (props) => {
 				case 'runtimeAndSeasons': {
 					const parts = [];
 					if (isSeries && seasonCount) {
-						parts.push({kind: 'text', text: $L('{count} Seasons').replace('{count}', seasonCount)});
+						parts.push({kind: 'text', text: $L('{count} seasons').replace('{count}', seasonCount)});
 					} else if (isSeason && episodes.length) {
 						parts.push({kind: 'text', text: $L('{count} Episodes').replace('{count}', episodes.length)});
 					} else if (isEpisode && item.ParentIndexNumber != null && item.IndexNumber != null) {

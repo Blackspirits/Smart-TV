@@ -165,7 +165,7 @@ export const SETTINGS_SCHEMA = [
 				description: () => $L('Sign-in, PIN code, Kids Mode, parental controls, and settings sync'),
 				rows: [
 					{kind: KIND.SECTION, id: 'signIn', label: () => $L('Sign-in')},
-					{kind: KIND.OPTION, key: 'autoLoginBehavior', label: () => $L('Auto Login'), options: getAutoLoginOptions, fallback: () => $L('Last User'), icon: 'person'},
+					{kind: KIND.OPTION, key: 'autoLoginBehavior', label: () => $L('Automatic Sign-In'), options: getAutoLoginOptions, fallback: () => $L('Last User'), icon: 'person'},
 					{kind: KIND.TOGGLE, key: 'alwaysAuthenticate', label: () => $L('Always Authenticate'), desc: () => $L('Require password even with stored token'), icon: 'lock'},
 					{kind: KIND.NAV, id: 'pinCodeSettings', label: () => $L('PIN Code'), desc: () => $L('Require a PIN to access your account'), icon: 'pin', action: (ctx) => ctx.actions.openScreen('account', 'pinCode', 'setting-pinCodeSettings')},
 					{kind: KIND.SECTION, id: 'family', label: () => $L('Family')},
@@ -173,7 +173,7 @@ export const SETTINGS_SCHEMA = [
 						kind: KIND.NAV,
 						id: 'kidsMode',
 						label: () => $L('Kids Mode'),
-						desc: () => $L('Simplify the app and lock the way out with a PIN'),
+						desc: () => $L('Simplify the app and require a PIN to exit this mode'),
 						icon: 'child_care',
 						keywords: () => ['kids', 'child', 'children', 'simple', 'lock', 'pin'],
 						when: (ctx) => !ctx.settings.kidsModeEnabled,
@@ -280,7 +280,7 @@ export const SETTINGS_SCHEMA = [
 					},
 					{kind: KIND.SLIDER, key: 'timeOffsetHours', label: () => $L('Clock Offset'), desc: () => $L('Correct the clock when the TV reports the wrong time'), min: -12, max: 12, step: 1, format: hourOffset, icon: 'more_time'},
 					{kind: KIND.SECTION, id: 'input', label: () => $L('Input')},
-					{kind: KIND.TOGGLE, key: 'preferSystemImeKeyboard', label: () => $L('Prefer System Keyboard'), desc: () => $L('Use your device input method by default for text entry'), icon: 'keyboard_alt_outlined'},
+					{kind: KIND.TOGGLE, key: 'preferSystemImeKeyboard', label: () => $L('Prefer System Keyboard'), desc: () => $L('Use your device\'s input method by default for text entry'), icon: 'keyboard_alt_outlined'},
 					{kind: KIND.SECTION, id: 'behavior', label: () => $L('Behavior')},
 					{kind: KIND.TOGGLE, key: 'exitConfirmation', label: () => $L('Confirm Exit'), desc: () => $L('Show confirmation before exiting'), icon: 'exit_to_app'},
 					{kind: KIND.SECTION, id: 'performance', label: () => $L('Performance')},
@@ -327,9 +327,9 @@ export const SETTINGS_SCHEMA = [
 						action: (ctx) => ctx.actions.openThemeStore()
 					},
 					{kind: KIND.SECTION, id: 'display', label: () => $L('Display')},
-					{kind: KIND.TOGGLE, key: 'cardFocusZoom', label: () => $L('Focus Expansion Animation'), desc: () => $L('Scale focused or hovered cards and tiles'), icon: 'zoom_in'},
+					{kind: KIND.TOGGLE, key: 'cardFocusZoom', label: () => $L('Focus Expansion Animation'), desc: () => $L('Enlarge cards and tiles when focused or hovered over'), icon: 'zoom_in'},
 					{kind: KIND.OPTION, key: 'uiScale', label: () => $L('UI Scaling'), options: getUiScaleOptions, fallback: () => $L('Default'), icon: 'zoom_out_map'},
-					{kind: KIND.TOGGLE, key: 'showHomeBackdrop', label: () => $L('Background Backdrops'), desc: () => $L('Show backdrop images behind content'), icon: 'photo'},
+					{kind: KIND.TOGGLE, key: 'showHomeBackdrop', label: () => $L('Background Images'), desc: () => $L('Show backdrop images behind content'), icon: 'photo'},
 					{kind: KIND.OPTION, key: 'oledMode', label: () => $L('OLED Mode'), desc: () => $L('Deepen blacks and enrich artwork. Best on OLED displays.'), options: getOledModeOptions, fallback: () => $L('Off'), icon: 'contrast'},
 					{kind: KIND.OPTION, key: 'backdropBlurHome', label: () => $L('Browsing Background Blur'), options: getBlurOptions, fallback: () => $L('Medium'), icon: 'blur_circular'},
 					{kind: KIND.OPTION, key: 'watchedIndicatorBehavior', label: () => $L('Watched Indicators'), options: getWatchedIndicatorOptions, fallback: () => $L('Always'), icon: 'check_circle'},
@@ -379,13 +379,13 @@ export const SETTINGS_SCHEMA = [
 					{kind: KIND.NAV, id: 'mediaBar', label: () => $L('Media Bar'), desc: () => $L('Featured content, appearance'), icon: 'featured_play_list', action: (ctx) => ctx.actions.openScreen('appearance', 'mediaBar', 'setting-mediaBar')},
 					{kind: KIND.SECTION, id: 'looks', label: () => $L('Looks')},
 					{kind: KIND.OPTION, key: 'homeRowsStyle', label: () => $L('Row Type'), desc: () => $L('Classic keeps per-row image type and info overlay. Modern uses portrait-to-backdrop rows.'), options: getHomeRowsStyleOptions, fallback: () => $L('Modern'), icon: 'view_carousel'},
-					{kind: KIND.TOGGLE, key: 'modernCardsOnMyMediaRow', label: () => $L('Modern cards on My Media row'), desc: () => $L('Display customizable posters that expand on focus. Disable to always show landscape thumbnail.'), icon: 'photo_library_outlined', when: (ctx) => ctx.settings.homeRowsStyle !== 'v1'},
+					{kind: KIND.TOGGLE, key: 'modernCardsOnMyMediaRow', label: () => $L('Modern cards on My Media row'), desc: () => $L('Show customizable posters that expand when focused. Disable to always show landscape thumbnails.'), icon: 'photo_library_outlined', when: (ctx) => ctx.settings.homeRowsStyle !== 'v1'},
 					{kind: KIND.OPTION, key: 'modernCardTransitionSpeed', label: () => $L('Modern Cards Transition Speed'), desc: () => $L('Adjusts animation speed when expanding focused modern cards'), options: getModernCardTransitionSpeedOptions, fallback: () => $L('Off'), icon: 'auto_awesome_motion_outlined', when: (ctx) => ctx.settings.homeRowsStyle !== 'v1'},
 					{kind: KIND.SLIDER, key: 'classicHomeRowsPadding', label: () => $L('Row Padding'), desc: () => $L('Customize padding between home rows'), min: 10, max: 130, step: 20, format: pixels, icon: 'unfold_more', when: (ctx) => ctx.settings.homeRowsStyle === 'v1' && !ctx.settings.fullScreenRows && !ctx.settings.homeRowOverlay},
 					{kind: KIND.SLIDER, key: 'modernHomeRowsPadding', label: () => $L('Row Padding'), desc: () => $L('Customize padding between home rows'), min: 360, max: 560, step: 20, format: pixels, icon: 'unfold_more', when: (ctx) => ctx.settings.homeRowsStyle !== 'v1' && !ctx.settings.fullScreenRows},
-					{kind: KIND.TOGGLE, key: 'fullScreenRows', label: () => $L('Expanded Rows'), desc: () => $L('Limit home rows to 1 row per screen'), icon: 'image_aspect_ratio'},
+					{kind: KIND.TOGGLE, key: 'fullScreenRows', label: () => $L('Expanded Rows'), desc: () => $L('Show one home row per screen'), icon: 'image_aspect_ratio'},
 					{kind: KIND.OPTION, key: 'homeRowsPosterSize', label: () => $L('Card Size'), options: getPosterSizeOptions, fallback: () => $L('Default'), icon: 'photo_size_select_large'},
-					{kind: KIND.OPTION, key: 'homeRowsImageType', label: () => $L('Home Rows Image Type'), desc: () => $L('The artwork rows use unless a row overrides it'), options: getImageTypeOptions, fallback: () => $L('Poster'), icon: 'image'},
+					{kind: KIND.OPTION, key: 'homeRowsImageType', label: () => $L('Home Rows Image Type'), desc: () => $L('Default artwork for rows unless a row overrides it'), options: getImageTypeOptions, fallback: () => $L('Poster'), icon: 'image'},
 					{kind: KIND.NAV, id: 'rowImageTypes', label: () => $L('Image Type per Row'), desc: () => $L('Configure image type for each enabled home row'), icon: 'image_outlined', when: (ctx) => ctx.settings.homeRowsStyle === 'v1', action: (ctx) => ctx.actions.openRowImageTypes()},
 					{kind: KIND.TOGGLE, key: 'useSeriesThumbnails', label: () => $L('Display Series Thumbnails'), desc: () => $L('For TV series, use the main series artwork instead of the episode thumbnail.'), icon: 'image_aspect_ratio'},
 					{kind: KIND.TOGGLE, key: 'episodePreviewEnabled', label: () => $L('Media Preview'), desc: () => $L('Play a short clip of the focused card after a moment.'), icon: 'play_circle'},
@@ -419,11 +419,11 @@ export const SETTINGS_SCHEMA = [
 				description: () => $L('Sorting and content for each row'),
 				rows: [
 					{kind: KIND.SECTION, id: 'continueWatchingAndNextUp', label: () => $L('CONTINUE WATCHING AND NEXT UP')},
-					{kind: KIND.TOGGLE, key: 'mergeContinueWatchingNextUp', label: () => $L('Merge Continue Watching and Next Up'), desc: () => $L('Combine both rows into a single home section'), icon: 'merge_type'},
+					{kind: KIND.TOGGLE, key: 'mergeContinueWatchingNextUp', label: () => $L('Merge Continue Watching and Next Up'), desc: () => $L('Combine both rows into one home section'), icon: 'merge_type'},
 					{kind: KIND.OPTION, key: 'nextUpMaxDays', label: () => $L('Max days in Next Up'), options: getNextUpMaxDaysOptions, fallback: () => $L('365 days'), desc: () => $L('How long a show stays in Next Up after you last watched it'), icon: 'event_busy', padded: true},
 					{kind: KIND.SECTION, id: 'recentlyAdded', label: () => $L('RECENTLY ADDED')},
 					{kind: KIND.TOGGLE, key: 'mergeRecentRowsByType', label: () => $L('Merge Recent Rows by Type'), desc: () => $L('Combine separate libraries of the same type for Recently Added and Recently Released home rows.'), icon: 'library_books'},
-					{kind: KIND.OPTION, key: 'recentlyReleasedSeriesType', label: () => $L('Recently Released Series Sort By'), desc: () => $L('Sort Recently Released Series home rows by series, latest season, or latest episode air date'), options: getRecentlyReleasedSeriesTypeOptions, fallback: () => $L('Series'), icon: 'ondemand_video'},
+					{kind: KIND.OPTION, key: 'recentlyReleasedSeriesType', label: () => $L('Sort Recently Released Series By'), desc: () => $L('Sort recently released series rows by the premiere date of the series, latest season, or latest episode'), options: getRecentlyReleasedSeriesTypeOptions, fallback: () => $L('Series'), icon: 'ondemand_video'},
 					{kind: KIND.SECTION, id: 'audio', label: () => $L('AUDIO')},
 					{kind: KIND.TOGGLE, key: 'displayAudioRows', label: () => $L('Display Audio Rows'), desc: () => $L('Show Audio rows in Home Sections.'), icon: 'music_note'},
 					{kind: KIND.OPTION, key: 'audioRowsSortBy', label: () => $L('Audio Rows sorting'), desc: () => $L('Sort Audio rows by date added, release date, alphabetically, and more.'), options: getHomeRowSortOptions, fallback: () => $L('Name'), icon: 'sort', when: (ctx) => ctx.settings.displayAudioRows},
@@ -448,19 +448,19 @@ export const SETTINGS_SCHEMA = [
 					{kind: KIND.OPTION, key: 'playlistsRowSortOrder', label: () => $L('Sort Order'), desc: () => $L('Sort Playlist rows in ascending or descending order.'), options: getSortOrderOptions, fallback: () => $L('Auto'), icon: 'swap_vert', when: (ctx) => ctx.settings.displayPlaylistsRows},
 					{kind: KIND.TOGGLE, key: 'playlistsRowShowEpisodes', label: () => $L('Show Individual Episodes'), desc: () => $L('Expand TV shows to display each episode separately.'), icon: 'video_library_outlined', when: (ctx) => ctx.settings.displayPlaylistsRows},
 					{kind: KIND.SECTION, id: 'rewatch', label: () => $L('REWATCH'), when: whenRewatch},
-					{kind: KIND.TOGGLE, key: 'displayRewatchRow', label: () => $L('Display Rewatch Row'), desc: () => $L('Show Rewatch row in Home Sections'), icon: 'replay', when: whenRewatch},
-					{kind: KIND.OPTION, key: 'rewatchSortBy', label: () => $L('Sort By'), desc: () => $L('Choose sorting method for completed items'), options: getRewatchSortOptions, fallback: () => $L('Recently Watched'), icon: 'sort', when: whenRewatchEnabled},
+					{kind: KIND.TOGGLE, key: 'displayRewatchRow', label: () => $L('Display Rewatch Row'), desc: () => $L('Show the Rewatch row in Home Sections'), icon: 'replay', when: whenRewatch},
+					{kind: KIND.OPTION, key: 'rewatchSortBy', label: () => $L('Sort By'), desc: () => $L('Choose how to sort completed items'), options: getRewatchSortOptions, fallback: () => $L('Recently Watched'), icon: 'sort', when: whenRewatchEnabled},
 					{kind: KIND.TOGGLE, key: 'rewatchIncludeMovies', label: () => $L('Include Movies'), desc: () => $L('Show watched movies in the rewatch row'), icon: 'movie', when: whenRewatchEnabled},
 					{kind: KIND.TOGGLE, key: 'rewatchIncludeShows', label: () => $L('Include Shows'), desc: () => $L('Show watched TV shows in the rewatch row'), icon: 'tv', when: whenRewatchEnabled},
 					{kind: KIND.TOGGLE, key: 'rewatchIncludeCollections', label: () => $L('Include Collections'), desc: () => $L('Show watched collections in the rewatch row'), icon: 'collections', when: whenRewatchEnabled},
 					{kind: KIND.SECTION, id: 'sinceYouWatched', label: () => $L('SINCE YOU WATCHED'), when: whenSinceYouWatched},
-					{kind: KIND.OPTION, key: 'sinceYouWatchedSource', label: () => $L('Recommendation Source'), desc: () => $L('Moonfin scores your own library, Jellyfin takes the picks from the server, TMDb uses Seerr, and Hybrid leads with the server then tops up locally'), options: getSinceYouWatchedSourceOptions, fallback: () => $L('Moonfin Recommends'), icon: 'source', when: whenSinceYouWatched},
-					{kind: KIND.OPTION, key: 'sinceYouWatchedSourceType', label: () => $L('Source Type'), desc: () => $L('Choose type of items to recommend'), options: getSinceYouWatchedSourceTypeOptions, fallback: () => $L('Movies'), icon: 'merge_type', when: whenSinceYouWatched},
-					{kind: KIND.OPTION, key: 'sinceYouWatchedSourceItem', label: () => $L('Source Item'), desc: () => $L('Choose which source item to base recommendations on'), options: getSinceYouWatchedSourceItemOptions, fallback: () => $L('Recently Watched'), icon: 'play_circle_filled', when: whenSinceYouWatched},
+					{kind: KIND.OPTION, key: 'sinceYouWatchedSource', label: () => $L('Recommendation Source'), desc: () => $L('Moonfin ranks items in your library. Jellyfin uses server recommendations. TMDB uses Seerr. Hybrid starts with server recommendations and adds local suggestions.'), options: getSinceYouWatchedSourceOptions, fallback: () => $L('Moonfin Recommends'), icon: 'source', when: whenSinceYouWatched},
+					{kind: KIND.OPTION, key: 'sinceYouWatchedSourceType', label: () => $L('Source Type'), desc: () => $L('Choose the types of items to recommend'), options: getSinceYouWatchedSourceTypeOptions, fallback: () => $L('Movies'), icon: 'merge_type', when: whenSinceYouWatched},
+					{kind: KIND.OPTION, key: 'sinceYouWatchedSourceItem', label: () => $L('Source Item'), desc: () => $L('Choose an item to base recommendations on'), options: getSinceYouWatchedSourceItemOptions, fallback: () => $L('Recently Watched'), icon: 'play_circle_filled', when: whenSinceYouWatched},
 					{kind: KIND.TOGGLE, key: 'sinceYouWatchedIncludeWatched', label: () => $L('Include Previously Watched'), desc: () => $L('Include watched items in recommendations'), icon: 'history', when: (ctx) => whenSinceYouWatched(ctx) && ctx.settings.sinceYouWatchedSource !== 'online'},
 					{kind: KIND.SECTION, id: 'studios', label: () => $L('STUDIOS')},
 					{kind: KIND.TOGGLE, key: 'displayStudiosRows', label: () => $L('Display Studio Row'), desc: () => $L('Show Studio row in Home Sections.'), icon: 'business'},
-					{kind: KIND.OPTION, key: 'studiosRowSortBy', label: () => $L('Studio Row Sorting'), desc: () => $L('Studio row by name, recently added, and more.'), options: getHomeRowSortOptions, fallback: () => $L('Name'), icon: 'sort_by_alpha', when: (ctx) => ctx.settings.displayStudiosRows},
+					{kind: KIND.OPTION, key: 'studiosRowSortBy', label: () => $L('Studio Row Sorting'), desc: () => $L('Sort the studio row by name, date added, and other criteria.'), options: getHomeRowSortOptions, fallback: () => $L('Name'), icon: 'sort_by_alpha', when: (ctx) => ctx.settings.displayStudiosRows},
 					{kind: KIND.OPTION, key: 'studiosRowSortOrder', label: () => $L('Sort Order'), desc: () => $L('Choose Ascending or Descending sort order.'), options: getSortOrderOptions, fallback: () => $L('Auto'), icon: 'swap_vert', when: (ctx) => ctx.settings.displayStudiosRows}
 				]
 			},
@@ -527,13 +527,13 @@ export const SETTINGS_SCHEMA = [
 				description: () => $L('Library visibility, order, and library pages'),
 				rows: [
 					{kind: KIND.SECTION, id: 'librariesGeneral', label: () => $L('General')},
-					{kind: KIND.NAV, id: 'hideLibraries', label: () => $L('Library Visibility'), desc: () => $L('Toggle home page visibility per library'), icon: 'visibility', action: (ctx) => ctx.actions.openLibraries()},
+					{kind: KIND.NAV, id: 'hideLibraries', label: () => $L('Library Visibility'), desc: () => $L('Choose which libraries appear on the home screen'), icon: 'visibility', action: (ctx) => ctx.actions.openLibraries()},
 					{kind: KIND.NAV, id: 'libraryOrder', label: () => $L('Library Order'), desc: () => $L('Choose the order of your libraries'), icon: 'swap_vert', keywords: () => ['reorder libraries', 'sort libraries', 'my media', 'navbar'], action: (ctx) => ctx.actions.openLibraryOrder()},
 					{kind: KIND.TOGGLE, key: 'unifiedLibraryMode', label: () => $L('Multi-Server Libraries'), desc: () => $L('Show libraries from all connected servers'), icon: 'dns'},
 					{kind: KIND.SECTION, id: 'libraryView', label: () => $L('Library View')},
-					{kind: KIND.TOGGLE, key: 'groupItemsIntoCollections', label: () => $L('Group Items into Collections'), desc: () => $L('Hide Collection associated library items when browsing libraries'), icon: 'collections_bookmark'},
+					{kind: KIND.TOGGLE, key: 'groupItemsIntoCollections', label: () => $L('Group Items into Collections'), desc: () => $L('Hide items that belong to collections when browsing libraries'), icon: 'collections_bookmark'},
 					{kind: KIND.TOGGLE, key: 'showMediaDetailsOnLibraryPage', label: () => $L('Show Media Details'), desc: () => $L('Show details of the selected item at the top of Library pages.'), icon: 'info_outline'},
-					{kind: KIND.TOGGLE, key: 'useDetailedSubHeadings', label: () => $L('Use Detailed Sub-Headings'), desc: () => $L('Show detailed or minimal subrow on Library pages.'), icon: 'subtitles'},
+					{kind: KIND.TOGGLE, key: 'useDetailedSubHeadings', label: () => $L('Use Detailed Sub-Headings'), desc: () => $L('Choose detailed or minimal secondary information on library pages.'), icon: 'subtitles'},
 					{kind: KIND.TOGGLE, key: 'hideBackdropsInLibraries', label: () => $L('Hide Backdrops While Browsing'), icon: 'hide_image_outlined'}
 				]
 			},
@@ -545,7 +545,7 @@ export const SETTINGS_SCHEMA = [
 				description: () => $L('Layout, buttons, sections, ratings, and theme music'),
 				rows: [
 					{kind: KIND.SECTION, id: 'detailsDisplay', label: () => $L('Display')},
-					{kind: KIND.OPTION, key: 'detailScreenStyle', label: () => $L('Details Screen Style'), desc: () => $L('Classic is the original centered moonfin layout. Modern is a responsive cinematic layout. Spotlight is a hero-first layout with pop-up content cards. Nouveau is a full-screen layout with sections stacked down the page. Minimalist is artwork, one play button and the episodes.'), options: getDetailScreenStyleOptions, fallback: () => $L('Modern'), icon: 'movie_outlined'},
+					{kind: KIND.OPTION, key: 'detailScreenStyle', label: () => $L('Details Screen Style'), desc: () => $L('Classic uses Moonfin\'s original centered layout. Modern adapts a cinematic layout to your screen. Spotlight highlights the artwork, with pop-up content cards. Nouveau stacks sections vertically on a full-screen page. Minimalist shows the artwork, one play button, and the episodes.'), options: getDetailScreenStyleOptions, fallback: () => $L('Modern'), icon: 'movie_outlined'},
 					{kind: KIND.OPTION, key: 'personalRatingStyle', label: () => $L('Personal Rating Style'), options: getPersonalRatingStyleOptions, fallback: () => $L('Like / dislike'), icon: 'rate_review'},
 					{
 						kind: KIND.OPTION,
@@ -565,7 +565,7 @@ export const SETTINGS_SCHEMA = [
 						key: 'detailButtonsMaxVisible',
 						padded: true,
 						label: () => $L('Action Buttons on Screen'),
-						desc: () => $L('Customize how many action buttons appear before folding into the More Actions menu.'),
+						desc: () => $L('Choose how many action buttons are visible before the rest move into the More Actions menu.'),
 						options: getDetailButtonsMaxVisibleOptions,
 						fallback: () => $L('Auto (Theme Default)'),
 						icon: 'more_horiz'
@@ -574,11 +574,11 @@ export const SETTINGS_SCHEMA = [
 					{kind: KIND.NAV, id: 'detailMetadata', label: () => $L('Metadata Row'), desc: () => $L('Choose and reorder what metadata the details screen shows'), icon: 'view_headline_outlined', action: (ctx) => ctx.actions.openDetailMetadata()},
 					{kind: KIND.NAV, id: 'detailSections', label: () => $L('Sections'), desc: () => $L('Choose which parts of the Details screen to show'), icon: 'dashboard_customize_outlined', keywords: () => ['sections', 'hide', 'logo', 'tagline', 'cast', 'crew', 'studios', 'chapters', 'extras', 'collections', 'similar', 'more like this', 'episodes', 'media info', 'seerr', 'recommendations', 'biography'], action: (ctx) => ctx.actions.openDetailSections()},
 					{kind: KIND.TOGGLE, key: 'detailExpandedTabs', label: () => $L('Expanded Tabs'), desc: () => $L('Automatically show tab content while browsing tabs. Turn off to open and close each tab manually.'), icon: 'tab', when: (ctx) => ctx.settings.detailScreenStyle === 'v2'},
-					{kind: KIND.TOGGLE, key: 'detailShowTechnicalDetails', label: () => $L('Show Technical Details'), desc: () => $L('Show codec, resolution, and stream information in banner summary'), icon: 'info_outline'},
+					{kind: KIND.TOGGLE, key: 'detailShowTechnicalDetails', label: () => $L('Show Technical Details'), desc: () => $L('Show codec, resolution, and stream information in the banner summary'), icon: 'info_outline'},
 					{kind: KIND.TOGGLE, key: 'hideDetailsMediaDescription', label: () => $L('Hide Media Description'), desc: () => $L('Hide the movie or episode descriptive text.'), icon: 'description_outlined'},
 					{kind: KIND.TOGGLE, key: 'detailUseSeriesThumbnails', label: () => $L('Use Series Thumbnails'), desc: () => $L('Replace thumbnails on the details page with the series thumbnail'), icon: 'image_outlined', when: (ctx) => ['v1', 'v4', 'v5'].indexOf(ctx.settings.detailScreenStyle) >= 0},
 					{kind: KIND.SECTION, id: 'recommendations', label: () => $L('Recommendations')},
-					{kind: KIND.OPTION, key: 'recommendationSystemSource', label: () => $L('Recommendation System'), desc: () => $L('Moonfin scores your own library, Jellyfin takes the picks from the server, TMDb uses Seerr, and Hybrid leads with the server then tops up locally'), options: getRecommendationSystemSourceOptions, fallback: () => $L('Moonfin Recommends'), icon: 'auto_awesome'},
+					{kind: KIND.OPTION, key: 'recommendationSystemSource', label: () => $L('Recommendation System'), desc: () => $L('Moonfin ranks items in your library. Jellyfin uses server recommendations. TMDB uses Seerr. Hybrid starts with server recommendations and adds local suggestions.'), options: getRecommendationSystemSourceOptions, fallback: () => $L('Moonfin Recommends'), icon: 'auto_awesome'},
 					{kind: KIND.SECTION, id: 'ratings', label: () => $L('Ratings')},
 					{kind: KIND.TOGGLE, key: 'mdblistEnabled', label: () => $L('Additional Ratings'), desc: () => $L('Show MDBList and TMDB ratings'), icon: 'star'},
 					{
@@ -597,8 +597,8 @@ export const SETTINGS_SCHEMA = [
 						id: 'resetRatings',
 						label: () => $L('Reset Ratings'),
 						desc: (ctx) => (ctx.ratingsResetArmed
-							? $L('Press again to put every ratings setting back to its default')
-							: $L('Restores the sources, their order, and the ratings toggles')),
+							? $L('Press again to restore all rating settings to their defaults')
+							: $L('Restore rating sources, their order, and the display settings')),
 						icon: 'restore',
 						action: (ctx) => ctx.actions.resetRatingsSettings()
 					},
@@ -693,7 +693,7 @@ export const SETTINGS_SCHEMA = [
 						action: (ctx) => ctx.actions.openScreensaverGenres()
 					},
 					{kind: KIND.OPTION, key: 'screensaverMaxRating', label: () => $L('Max Age Rating'), options: getAgeRatingOptions, fallback: 'PG-13', icon: 'shield', when: whenScreensaverLibrary, padded: true},
-					{kind: KIND.TOGGLE, key: 'screensaverAgeFilter', label: () => $L('Require Age Rating'), desc: () => $L('Only show rated content'), icon: 'verified_user', when: whenScreensaverLibrary}
+					{kind: KIND.TOGGLE, key: 'screensaverAgeFilter', label: () => $L('Require Age Rating'), desc: () => $L('Only show content with an age rating'), icon: 'verified_user', when: whenScreensaverLibrary}
 				]
 			}
 		]
@@ -719,10 +719,10 @@ export const SETTINGS_SCHEMA = [
 					{kind: KIND.OPTION, key: 'playerZoomMode', label: () => $L('Player Zoom Mode'), desc: () => $L('How video should be scaled to fit the screen.'), options: getZoomModeOptions, fallback: () => $L('Fit'), icon: 'zoom_out_map'},
 					{kind: KIND.NAV, id: 'progressBarTime', label: () => $L('Progress Bar Time'), desc: () => $L('Choose which time labels appear around the playback progress bar.'), icon: 'timer_outlined', action: (ctx) => ctx.actions.openScreen('playback', 'playbackTime', 'setting-progressBarTime')},
 					{kind: KIND.OPTION, key: 'resumeSubtractDuration', label: () => $L('Resume Rewind'), desc: () => $L('When resuming playback (from Continue Watching or a media item page), how many seconds should be rewound?'), options: getResumeRewindOptions, fallback: () => $L('Disabled'), icon: 'replay', padded: true},
-					{kind: KIND.SLIDER, key: 'unpauseRewind', label: () => $L('Unpause Rewind'), desc: () => $L('When resuming playback after pressing the pause button, how many seconds should be rewound?'), min: 0, max: 30, step: 5, format: (v) => (v === 0 ? $L('Off') : `${v}s`), icon: 'replay_circle_filled'},
-					{kind: KIND.OPTION, key: 'skipBackLength', label: () => $L('Skip Back Length'), desc: () => $L('How many seconds to jump back after pressing the rewind button.'), options: getSkipLengthOptions, fallback: () => $L('10 seconds'), icon: 'fast_rewind', padded: true},
-					{kind: KIND.OPTION, key: 'skipForwardLength', label: () => $L('Skip Forward Length'), desc: () => $L('How many seconds to jump forward after pressing the fast forward button.'), options: getSkipLengthOptions, fallback: () => $L('30 seconds'), icon: 'fast_forward', padded: true},
-					{kind: KIND.OPTION, key: 'seekStep', label: () => $L('Seek Step'), desc: () => $L('How far each press moves while scrubbing the progress bar'), options: getSeekStepOptions, fallback: () => $L('10 seconds'), icon: 'linear_scale'},
+					{kind: KIND.SLIDER, key: 'unpauseRewind', label: () => $L('Unpause Rewind'), desc: () => $L('How many seconds to rewind when resuming after a pause.'), min: 0, max: 30, step: 5, format: (v) => (v === 0 ? $L('Off') : `${v}s`), icon: 'replay_circle_filled'},
+					{kind: KIND.OPTION, key: 'skipBackLength', label: () => $L('Skip Back Length'), desc: () => $L('How many seconds to jump back when you press the rewind button.'), options: getSkipLengthOptions, fallback: () => $L('10 seconds'), icon: 'fast_rewind', padded: true},
+					{kind: KIND.OPTION, key: 'skipForwardLength', label: () => $L('Skip Forward Length'), desc: () => $L('How many seconds to jump forward when you press the fast-forward button.'), options: getSkipLengthOptions, fallback: () => $L('30 seconds'), icon: 'fast_forward', padded: true},
+					{kind: KIND.OPTION, key: 'seekStep', label: () => $L('Seek Step'), desc: () => $L('How far each button press moves the playhead along the progress bar'), options: getSeekStepOptions, fallback: () => $L('10 seconds'), icon: 'linear_scale'},
 					{kind: KIND.TOGGLE, key: 'showChapterMarkers', label: () => $L('Chapter Marks'), desc: () => $L('Mark where each chapter starts on the seek bar'), icon: 'straighten'},
 					{kind: KIND.NAV, id: 'osdButtons', label: () => $L('Player Buttons'), desc: () => $L('Choose which buttons the player shows'), icon: 'tune', action: (ctx) => ctx.actions.openOsdButtons()},
 					{kind: KIND.SECTION, id: 'trickPlay', label: () => $L('Trick Play')},
@@ -763,12 +763,12 @@ export const SETTINGS_SCHEMA = [
 				description: () => $L('Bitrate, resolution, transcoding, and codec support'),
 				rows: [
 					{kind: KIND.SECTION, id: 'streaming', label: () => $L('Streaming')},
-					{kind: KIND.OPTION, key: 'maxBitrate', label: () => $L('Max Streaming Bitrate'), desc: () => $L('Cap the streaming bitrate. Content above this threshold will be transcoded to fit.'), options: getBitrateOptions, fallback: () => $L('Auto (Recommended)'), icon: 'network_check', padded: true},
-					{kind: KIND.OPTION, key: 'maxVideoResolution', label: () => $L('Max Resolution'), desc: () => $L('Limit the maximum resolution the player will request. Higher-resolution content will be transcoded down.'), options: getMaxResolutionOptions, fallback: () => $L('Auto'), icon: 'high_quality'},
-					{kind: KIND.TOGGLE, key: 'liveTvSkipGuide', label: () => $L('Skip TV Guide'), desc: () => $L('Open the first available live channel directly from library selection'), icon: 'live_tv'},
+					{kind: KIND.OPTION, key: 'maxBitrate', label: () => $L('Max Streaming Bitrate'), desc: () => $L('Limit the streaming bitrate. Content above this limit will be transcoded to fit.'), options: getBitrateOptions, fallback: () => $L('Auto (Recommended)'), icon: 'network_check', padded: true},
+					{kind: KIND.OPTION, key: 'maxVideoResolution', label: () => $L('Max Resolution'), desc: () => $L('Limit the resolution requested by the player. Higher-resolution content will be transcoded to a lower resolution.'), options: getMaxResolutionOptions, fallback: () => $L('Auto'), icon: 'high_quality'},
+					{kind: KIND.TOGGLE, key: 'liveTvSkipGuide', label: () => $L('Skip TV Guide'), desc: () => $L('Open the first available live TV channel when selecting a library'), icon: 'live_tv'},
 					{kind: KIND.SECTION, id: 'decodingRendering', label: () => $L('Decoding & Rendering')},
 					{kind: KIND.TOGGLE, key: 'preferTranscode', label: () => $L('Prefer Transcoding'), desc: () => $L('Request transcoded streams when available'), icon: 'transform'},
-					{kind: KIND.TOGGLE, key: 'forceDirectPlay', label: () => $L('Force Direct Play'), desc: () => $L('Skip codec checks and always attempt DirectPlay (debug)'), icon: 'play_arrow'},
+					{kind: KIND.TOGGLE, key: 'forceDirectPlay', label: () => $L('Force Direct Play'), desc: () => $L('Skip codec checks and always attempt Direct Play (debug)'), icon: 'play_arrow'},
 					{kind: KIND.TOGGLE, key: 'xboxNativePlayer', label: () => $L('Console Video Player'), desc: () => $L("Play video through the console's own player for HEVC, 4K and HDR. Turn off to use the built-in web player. Takes effect on the next playback"), icon: 'play_circle', when: (ctx) => ctx.isXbox},
 					{kind: KIND.SLIDER, key: 'videoStartDelay', label: () => $L('Video Start Delay'), min: 0, max: 5, step: 0.5, format: (v) => (v === 0 ? $L('Off') : `${Number(v).toFixed(1)}s`), icon: 'schedule'}
 				]
@@ -783,7 +783,7 @@ export const SETTINGS_SCHEMA = [
 					{kind: KIND.SECTION, id: 'audioStream', label: () => $L('Audio Stream')},
 					{kind: KIND.OPTION, key: 'audioLanguage', label: () => $L('Default Audio Language'), options: getAudioLanguageOptions, fallback: () => $L('Auto'), icon: 'language', padded: true},
 					{kind: KIND.OPTION, key: 'fallbackAudioLanguage', label: () => $L('Fallback Audio Language'), options: getSubtitleLanguageOptions, fallback: () => $L('None'), icon: 'language', padded: true},
-					{kind: KIND.TOGGLE, key: 'preferDefaultAudioTrack', label: () => $L('Prefer Default Audio Track'), desc: () => $L('Prefer original audio track over localized dub.'), icon: 'audiotrack'},
+					{kind: KIND.TOGGLE, key: 'preferDefaultAudioTrack', label: () => $L('Prefer Default Audio Track'), desc: () => $L('Prioritize the audio track marked as default in the file metadata before matching your preferred languages.'), icon: 'audiotrack'},
 					{kind: KIND.TOGGLE, key: 'preferAudioDescription', label: () => $L('Prefer Audio Description Tracks'), desc: () => $L('Prefer audio description tracks over normal tracks.'), icon: 'hearing'},
 					{kind: KIND.SECTION, id: 'audioOutput', label: () => $L('Audio Output')},
 					{kind: KIND.OPTION, key: 'audioPassthroughMode', label: () => $L('Passthrough'), desc: () => $L('How compressed surround sound reaches your TV or receiver.'), options: getPassthroughModeOptions, fallback: () => $L('Auto'), icon: 'surround_sound', when: (ctx) => !inBrowserElement(ctx)},
@@ -795,10 +795,10 @@ export const SETTINGS_SCHEMA = [
 					{kind: KIND.TOGGLE, key: 'dtsPassthrough', label: () => $L('DTS Core Passthrough'), desc: () => $L('Bitstream DTS audio to AVR only; requires receiver support and DTS source track'), icon: 'audiotrack', when: whenPassthrough},
 					{kind: KIND.TOGGLE, key: 'dtshdPassthrough', label: () => $L('DTS-HD MA Passthrough'), desc: () => $L('Bitstream DTS-HD, including DTS:X.'), icon: 'high_quality', when: whenPassthrough},
 					{kind: KIND.TOGGLE, key: 'truehdPassthrough', label: () => $L('TrueHD Passthrough'), desc: () => $L('Bitstream TrueHD, including Dolby Atmos.'), icon: 'graphic_eq', when: whenPassthrough},
-					{kind: KIND.TOGGLE, key: 'forceTruehdPassthrough', label: () => $L('Force TrueHD / Atmos Passthrough'), desc: () => $L('Send Dolby TrueHD and Atmos straight to your receiver. Make sure your receiver supports it.'), icon: 'graphic_eq', when: (ctx) => whenTruehdOptIn(ctx) && ctx.isWebOS},
+					{kind: KIND.TOGGLE, key: 'forceTruehdPassthrough', label: () => $L('Force TrueHD / Atmos Passthrough'), desc: () => $L('Send Dolby TrueHD and Atmos directly to your receiver. Make sure your receiver supports these formats.'), icon: 'graphic_eq', when: (ctx) => whenTruehdOptIn(ctx) && ctx.isWebOS},
 					{kind: KIND.TOGGLE, key: 'experimentalTruehd', label: () => $L('Experimental TrueHD Attempt'), desc: () => $L('May fall back to PCM, DD+, or AC3. Requires eARC + receiver. Not for TV speakers.'), icon: 'speaker', when: (ctx) => whenTruehdOptIn(ctx) && ctx.isTizen, onToggle: (ctx) => ctx.actions.toggleExperimentalTruehd()},
 					{kind: KIND.SECTION, id: 'audioAdvanced', label: () => $L('Advanced')},
-					{kind: KIND.OPTION, key: 'maxAudioChannels', label: () => $L('Max Audio Channels'), desc: () => $L('Configure the maximum channels of your audio setup. Multichannel streams exceeding this limit will downmix or transcode.'), options: getMaxAudioChannelsOptions, fallback: () => $L('Auto Detect'), icon: 'speaker_group', padded: true}
+					{kind: KIND.OPTION, key: 'maxAudioChannels', label: () => $L('Max Audio Channels'), desc: () => $L('Set the maximum number of channels in your audio setup. Streams with more channels will be downmixed or transcoded.'), options: getMaxAudioChannelsOptions, fallback: () => $L('Auto Detect'), icon: 'speaker_group', padded: true}
 				]
 			},
 			{
@@ -820,7 +820,7 @@ export const SETTINGS_SCHEMA = [
 					{kind: KIND.SECTION, id: 'subtitleRendering', label: () => $L('Subtitle Rendering'), when: whenSubtitlesOn},
 					{kind: KIND.TOGGLE, key: 'enablePgsRendering', label: () => $L('PGS Direct Play'), desc: () => $L('Direct play PGS subtitles'), icon: 'image', when: whenSubtitlesOn},
 					{kind: KIND.TOGGLE, key: 'assDirectPlay', label: () => $L('ASS/SSA Direct Play'), desc: () => $L('Direct play ASS/SSA subtitles'), icon: 'text_snippet', when: whenSubtitlesOn},
-					{kind: KIND.TOGGLE, key: 'waitForAssSubtitles', label: () => $L('Wait for ASS/SSA subtitles'), desc: () => $L('Hold the video until styled subtitles are ready so the first lines show'), icon: 'timer', when: (ctx) => whenSubtitlesOn(ctx) && ctx.isWebOS && ctx.settings.assDirectPlay !== false}
+					{kind: KIND.TOGGLE, key: 'waitForAssSubtitles', label: () => $L('Wait for ASS/SSA subtitles'), desc: () => $L('Delay playback until styled subtitles are ready so the first lines are visible'), icon: 'timer', when: (ctx) => whenSubtitlesOn(ctx) && ctx.isWebOS && ctx.settings.assDirectPlay !== false}
 				]
 			},
 			{
@@ -878,11 +878,11 @@ export const SETTINGS_SCHEMA = [
 					{kind: KIND.OPTION, key: 'mediaSegmentAutoHide', label: () => $L('Auto Hide Skip Button'), desc: () => $L('Automatically dismiss the skip intro and outro button after a few seconds.'), options: getMediaSegmentAutoHideOptions, fallback: () => $L('Off'), icon: 'visibility_off_outlined', when: (ctx) => ctx.settings.introAction === 'ask' || ctx.settings.outroAction === 'ask'},
 					{kind: KIND.SECTION, id: 'automaticQueuing', label: () => $L('Automatic Queuing')},
 					{kind: KIND.TOGGLE, key: 'autoPlay', label: () => $L('Autoplay Next Episode'), desc: () => $L('Automatically play the next episode when available.'), icon: 'play_circle'},
-					{kind: KIND.OPTION, key: 'nextUpBehavior', label: () => $L('Next Up Display'), desc: () => $L('Extended shows a full card with episode artwork and description. Minimal shows a compact countdown overlay. Disabled hides the prompt entirely.'), options: getNextUpBehaviorOptions, fallback: () => $L('Extended'), icon: 'skip_next'},
+					{kind: KIND.OPTION, key: 'nextUpBehavior', label: () => $L('Next Up Display'), desc: () => $L('Extended shows a full card with episode artwork and a description. Minimal shows a compact countdown. Disabled hides the prompt entirely.'), options: getNextUpBehaviorOptions, fallback: () => $L('Extended'), icon: 'skip_next'},
 					{kind: KIND.OPTION, key: 'nextUpCountdownStyle', label: () => $L('Media Segment Countdown'), options: getNextUpCountdownStyleOptions, fallback: () => $L('Both'), icon: 'timer_outlined', when: (ctx) => ctx.settings.nextUpBehavior !== 'disabled'},
 					{kind: KIND.SLIDER, key: 'nextUpTimeout', label: () => $L('Next Up Timeout'), min: 0, max: 30, step: 1, format: (v) => (v === 0 ? $L('Instant') : `${v}s`), icon: 'timer', when: (ctx) => ctx.settings.nextUpBehavior !== 'disabled'},
 					{kind: KIND.TOGGLE, key: 'replaceSkipOutroWithNextUp', label: () => $L('Replace Skip Outro with Next Up Display'), desc: () => $L('Show the Next Up overlay instead of the Skip Outro button.'), icon: 'skip_next', when: (ctx) => ctx.settings.outroAction !== 'none'},
-					{kind: KIND.OPTION, key: 'stillWatchingBehavior', label: () => $L('Still Watching Prompt'), options: getStillWatchingBehaviorOptions, fallback: () => $L('3 episodes'), desc: () => $L('Prompt to Continue Watching after X consecutive episodes.'), icon: 'visibility'}
+					{kind: KIND.OPTION, key: 'stillWatchingBehavior', label: () => $L('Still Watching Prompt'), options: getStillWatchingBehaviorOptions, fallback: () => $L('3 episodes'), desc: () => $L('Ask whether to continue watching after the selected number of consecutive episodes.'), icon: 'visibility'}
 				]
 			},
 			{
@@ -893,11 +893,11 @@ export const SETTINGS_SCHEMA = [
 				description: () => $L('Synchronization logic for group sessions'),
 				rows: [
 					{kind: KIND.SECTION, id: 'syncPlayOptions', label: () => $L('SyncPlay Options')},
-					{kind: KIND.TOGGLE, key: 'syncplayEnabled', label: () => $L('SyncPlay Enabled'), desc: () => $L('Enable group watching features'), icon: 'groups'},
-					{kind: KIND.TOGGLE, key: 'syncplayAutoOpen', label: () => $L('Open SyncPlay'), desc: () => $L('Automatically open SyncPlay dialog when starting playback'), icon: 'group_work'},
-					{kind: KIND.TOGGLE, key: 'syncPlayAdvancedCorrectionEnabled', label: () => $L('Advanced Correction'), desc: () => $L('Enable fine-grained sync logic'), icon: 'tune'},
+					{kind: KIND.TOGGLE, key: 'syncplayEnabled', label: () => $L('SyncPlay Enabled'), desc: () => $L('Enable synchronized group watching'), icon: 'groups'},
+					{kind: KIND.TOGGLE, key: 'syncplayAutoOpen', label: () => $L('Open SyncPlay'), desc: () => $L('Automatically open the SyncPlay dialog when playback starts'), icon: 'group_work'},
+					{kind: KIND.TOGGLE, key: 'syncPlayAdvancedCorrectionEnabled', label: () => $L('Advanced Correction'), desc: () => $L('Enable more precise synchronization'), icon: 'tune'},
 					{kind: KIND.TOGGLE, key: 'syncPlayEnableSyncCorrection', label: () => $L('Sync Correction'), desc: () => $L('Automatically adjust playback to stay in sync'), icon: 'sync', when: whenSyncCorrection},
-					{kind: KIND.TOGGLE, key: 'syncPlayUseSkipToSync', label: () => $L('Skip to Sync'), desc: () => $L('Use seeking to sync'), icon: 'skip_next', when: whenSyncCorrection},
+					{kind: KIND.TOGGLE, key: 'syncPlayUseSkipToSync', label: () => $L('Skip to Sync'), desc: () => $L('Adjust the playback position to stay in sync'), icon: 'skip_next', when: whenSyncCorrection},
 					{kind: KIND.SLIDER, key: 'syncPlayMinDelaySkipToSync', label: () => $L('Minimum Skip Delay'), min: 0, max: 15000, step: 250, format: milliseconds, icon: 'timer', when: (ctx) => whenSyncCorrection(ctx) && ctx.settings.syncPlayUseSkipToSync},
 					{kind: KIND.SLIDER, key: 'syncPlayExtraTimeOffset', label: () => $L('SyncPlay Extra Offset'), min: -2000, max: 2000, step: 100, format: milliseconds, icon: 'schedule'}
 				]
@@ -1009,10 +1009,10 @@ export const SETTINGS_SCHEMA = [
 					{kind: KIND.CUSTOM, id: 'checkForUpdates', render: 'checkForUpdates'},
 					{kind: KIND.NAV, id: 'sourceCode', label: () => $L('Source Code'), desc: () => 'github.com/Moonfin-Client/Smart-TV', icon: 'code', action: (ctx) => ctx.actions.openQrLink($L('Source Code'), 'https://github.com/Moonfin-Client/Smart-TV', 'setting-sourceCode')},
 					{kind: KIND.NAV, id: 'reportIssue', label: () => $L('Report an Issue'), desc: () => $L('Open the issue tracker on GitHub'), icon: 'bug_report', action: (ctx) => ctx.actions.openQrLink($L('Report an Issue'), 'https://github.com/Moonfin-Client/Smart-TV/issues', 'setting-reportIssue')},
-					{kind: KIND.NAV, id: 'diagnosticsLogging', label: () => $L('Diagnostics & Logging'), desc: () => $L('Capture media, login and network logs and send them to the server as a report'), icon: 'troubleshoot', action: (ctx) => ctx.actions.openScreen('about', 'diagnostics', 'setting-diagnosticsLogging')},
+					{kind: KIND.NAV, id: 'diagnosticsLogging', label: () => $L('Diagnostics & Logging'), desc: () => $L('Record playback, sign-in, and network logs for a report you can send to the server'), icon: 'troubleshoot', action: (ctx) => ctx.actions.openScreen('about', 'diagnostics', 'setting-diagnosticsLogging')},
 					{kind: KIND.NAV, id: 'runSetupAgain', label: () => $L('Run setup again'), icon: 'auto_awesome', when: (ctx) => !!ctx.actions.runSetupAgain, action: (ctx) => ctx.actions.runSetupAgain()},
 					{kind: KIND.NAV, id: 'joinDiscord', label: () => $L('Join Discord'), desc: () => $L('Chat with the community'), icon: 'forum', action: (ctx) => ctx.actions.openQrLink($L('Join Discord'), 'https://discord.gg/moonfin', 'setting-joinDiscord')},
-					{kind: KIND.NAV, id: 'supportMoonfin', label: () => $L('Support Moonfin'), desc: () => $L('Donate a coffee to the developer'), icon: 'favorite', action: (ctx) => ctx.actions.openQrLink($L('Support Moonfin'), 'https://buymeacoffee.com/moonfin', 'setting-supportMoonfin')},
+					{kind: KIND.NAV, id: 'supportMoonfin', label: () => $L('Support Moonfin'), desc: () => $L('Buy the developer a coffee'), icon: 'favorite', action: (ctx) => ctx.actions.openQrLink($L('Support Moonfin'), 'https://buymeacoffee.com/moonfin', 'setting-supportMoonfin')},
 					{kind: KIND.SECTION, id: 'legal', label: () => $L('LEGAL')},
 					{kind: KIND.NAV, id: 'licenses', label: () => $L('Licenses'), desc: () => $L('Open-source license notices'), icon: 'description', action: (ctx) => ctx.actions.openQrLink($L('Licenses'), 'https://github.com/Moonfin-Client/Smart-TV/blob/main/LICENSE', 'setting-licenses')},
 					{kind: KIND.NAV, id: 'privacyPolicy', label: () => $L('Privacy Policy'), desc: () => $L('How Moonfin handles your data'), icon: 'privacy_tip', action: (ctx) => ctx.actions.openQrLink($L('Privacy Policy'), 'https://moonfin.io/privacy', 'setting-privacyPolicy')},
@@ -1095,13 +1095,13 @@ export const SETTINGS_SCHEMA = [
 				icon: 'bug_report',
 				menu: false,
 				label: () => $L('Diagnostics & Logging'),
-				description: () => $L('Capture media, login and network logs and send them to the server as a report'),
+				description: () => $L('Record playback, sign-in, and network logs for a report you can send to the server'),
 				rows: [
 					{kind: KIND.SECTION, id: 'logging', label: () => $L('Logging')},
 					{kind: KIND.TOGGLE, key: 'diagnosticLoggingEnabled', label: () => $L('Diagnostic Logging'), desc: () => $L('Capture media, Seerr login, network and other diagnostics so they can be sent to the server as a report.'), icon: 'bug_report'},
-					{kind: KIND.TOGGLE, key: 'serverLogging', label: () => $L('Server Logging'), desc: () => $L('Send logs to Jellyfin server for troubleshooting'), icon: 'cloud_upload'},
+					{kind: KIND.TOGGLE, key: 'serverLogging', label: () => $L('Server Logging'), desc: () => $L('Send logs to the Jellyfin server for troubleshooting'), icon: 'cloud_upload'},
 					{kind: KIND.SECTION, id: 'reports', label: () => $L('Reports')},
-					{kind: KIND.NAV, id: 'viewLogs', label: () => $L('View Logs'), desc: () => $L('Read the recorded log and send a report'), icon: 'troubleshoot', action: (ctx) => ctx.actions.openDiagnostics()},
+					{kind: KIND.NAV, id: 'viewLogs', label: () => $L('View Logs'), desc: () => $L('View recorded logs and send a report'), icon: 'troubleshoot', action: (ctx) => ctx.actions.openDiagnostics()},
 					{kind: KIND.NAV, id: 'deviceProbe', label: () => $L('Device Probe'), desc: () => $L('Test what this device can play and send the report to your server'), icon: 'tv', when: (ctx) => !!ctx.actions.openDeviceProbe, action: (ctx) => ctx.actions.openDeviceProbe()}
 				]
 			}

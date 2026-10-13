@@ -22,7 +22,7 @@ const LibrariesView = ({
 }) => (
 	<SettingsView spotlightId='libraries-view' title={$L('Hide Libraries')} clean>
 		<div className={css.viewDescription}>
-			{$L('Hidden libraries are removed from all Jellyfin clients. This is a server-level setting.')}
+			{$L('Hidden libraries are excluded for this account in clients that use the server\'s visibility preferences. This does not delete the libraries.')}
 		</div>
 		{loading ? (
 			<div className={css.loadingMessage}>{$L('Loading libraries...')}</div>

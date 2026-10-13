@@ -1581,7 +1581,7 @@ const Settings = ({ onBack, onLibrariesChanged, onRunSetupWizard, onSelectItem, 
 				<MediaBarSourceView
 					viewSpotlightId='screensaver-genres-view'
 					title={$L('Excluded Genres')}
-					description={$L('Artwork from the genres you pick here is left out of the screensaver.')}
+					description={$L('Exclude artwork from the selected genres from the screensaver.')}
 					loadingLabel={$L('Loading genres...')}
 					loading={screensaverSourcesLoading}
 					items={screensaverGenres}

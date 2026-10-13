@@ -1276,7 +1276,7 @@ const LiveTV = ({onPlayChannel, onRecordings, backHandlerRef}) => {
 									className={`${css.dialogBtn} ${programHasTimer ? css.danger : ''} ${recordingNow ? 'spottable-default' : ''}`}
 									onClick={() => runDialogAction( // eslint-disable-line react/jsx-no-bind
 										() => store.toggleProgramRecording(program),
-										programHasTimer ? $L('Recording cancelled') : $L('Program set to record'),
+										programHasTimer ? $L('Recording canceled') : $L('Recording scheduled'),
 										programHasTimer ? $L('Failed to cancel recording') : $L('Unable to create recording')
 									)}
 								>
@@ -1288,7 +1288,7 @@ const LiveTV = ({onPlayChannel, onRecordings, backHandlerRef}) => {
 									className={`${css.dialogBtn} ${programHasSeriesTimer ? css.danger : ''}`}
 									onClick={() => runDialogAction( // eslint-disable-line react/jsx-no-bind
 										() => store.toggleSeriesRecording(program),
-										programHasSeriesTimer ? $L('Series recording cancelled') : $L('Series set to record'),
+										programHasSeriesTimer ? $L('Series recording canceled') : $L('Series set to record'),
 										programHasSeriesTimer ? $L('Failed to cancel series recording') : $L('Unable to create series recording')
 									)}
 								>
@@ -1304,7 +1304,7 @@ const LiveTV = ({onPlayChannel, onRecordings, backHandlerRef}) => {
 									$L('Failed to update favorite channel')
 								)}
 							>
-								{favoriteChannel ? $L('Unfavorite Channel') : $L('Favorite Channel')}
+								{favoriteChannel ? $L('Remove Channel from Favorites') : $L('Add Channel to Favorites')}
 							</SpottableButton>
 							<SpottableButton
 								className={`${css.dialogBtn} ${recordingNow ? '' : 'spottable-default'}`}

@@ -163,7 +163,7 @@ const IdentifyModal = ({open, item, api, onClose, onApplied, onSuccess}) => {
 						</SpottableDiv>
 						<SpottableDiv className={css.row} onClick={handleRefresh}>
 							<span className={css.rowLabel}>{busy ? $L('Refreshing...') : $L('Refresh Metadata')}</span>
-							<span className={css.rowDetail}>{$L('Re-read the metadata the providers already have')}</span>
+							<span className={css.rowDetail}>{$L('Refresh metadata from the providers')}</span>
 						</SpottableDiv>
 					</>
 				)}

@@ -80,7 +80,7 @@ export const itemMenuActions = (item, {isAdmin = false, isJellyfin = true, canMa
 		}
 		actions.push({id: 'addToPlaylist', icon: DETAIL_ICON_PATHS.playlist, label: $L('Add to Playlist')});
 		if (playlist?.canManage) {
-			actions.push({id: 'removeFromPlaylist', icon: MENU_ICON_PATHS.playlistRemove, label: $L('Delete from Playlist')});
+			actions.push({id: 'removeFromPlaylist', icon: MENU_ICON_PATHS.playlistRemove, label: $L('Remove from Playlist')});
 			if (!playlist.first) actions.push({id: 'moveUp', icon: MENU_ICON_PATHS.arrowUpward, label: $L('Move Up')});
 			if (!playlist.last) actions.push({id: 'moveDown', icon: MENU_ICON_PATHS.arrowDownward, label: $L('Move Down')});
 		}

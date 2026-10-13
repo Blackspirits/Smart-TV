@@ -15,9 +15,9 @@ export const MIN_SERVER_VERSION = '10.9.0';
 // chunk has landed and these modules are imported well before that.
 const MESSAGES = {
 	[TIMEOUT]: () => $L('Connection timed out. Check the address and your network.'),
-	[DNS_OR_NETWORK]: () => $L('Could not reach server. Check the address and that the server is running.'),
+	[DNS_OR_NETWORK]: () => $L('Could not reach the server. Check the address and make sure the server is running.'),
 	[INVALID_ADDRESS]: () => $L('Invalid server address format.'),
-	[SERVER_NOT_JELLYFIN]: () => $L('Server responded but does not appear to be Jellyfin or Emby.'),
+	[SERVER_NOT_JELLYFIN]: () => $L('The server responded, but it does not appear to be a Jellyfin or Emby server.'),
 	[VERSION_UNSUPPORTED]: () => $L('Server version is not supported. Minimum: {version}').replace('{version}', MIN_SERVER_VERSION) + '.',
 	[AUTH_FAILED]: () => $L('Invalid username or password.'),
 	[SERVER_ERROR]: () => $L('Server error. Please try again later.'),

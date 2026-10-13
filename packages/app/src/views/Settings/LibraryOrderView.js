@@ -76,7 +76,7 @@ const LibraryOrderView = ({api, unified, onLibrariesChanged}) => {
 	return (
 		<SettingsView spotlightId='library-order-view' title={$L('Library Order')} clean>
 			<div className={css.editorHint}>
-				{$L('Your libraries appear in this order on My Media, the recently added rows and the navigation bar. The order is saved to your server account, so other apps you sign in to use it too.')}
+				{$L('Your libraries appear in this order in My Media, recently added rows, and the navigation bar. The order is saved to your server account and used by other apps you sign in to.')}
 			</div>
 			<div className={`${css.editorHint} ${css.editorHintLast} ${css.editorHintShort}`}>
 				{$L('Press left or right to move the highlighted library.')}

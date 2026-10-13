@@ -79,8 +79,8 @@ const useProfileSync = ({
 		if (!resetArmed) {
 			setResetArmed(true);
 			setMessage(activeProfile === 'global'
-				? $L('Press again to erase every stored profile on the server')
-				: $L('Press again to reset this profile to global'));
+				? $L('Press again to delete all profiles stored by the Moonfin plugin on the server')
+				: $L('Press again to reset this profile to the global settings'));
 			return;
 		}
 		run(async () => {

@@ -69,7 +69,7 @@ const questionFor = (step) => {
 		case 'mediaBar': return $L('How should the top of your Home screen look?');
 		case 'homeRows': return $L('How should your rows look?');
 		case 'detailStyle': return $L('How should a movie or show look when you open it?');
-		default: return $L("You're set. Here's what else is in here.");
+		default: return $L("You're all set. Discover what else is available.");
 	}
 };
 
@@ -645,7 +645,7 @@ const SetupWizard = ({onDone, backHandlerRef}) => {
 				<SettingRow
 					spotlightId='setup-wizard-preferDefaultAudioTrack'
 					label={$L('Prefer Default Audio Track')}
-					hint={$L('Pick the track the file marks as default before matching languages')}
+					hint={$L('Prioritize the audio track marked as default in the file metadata before matching your preferred languages')}
 					trailing={<SwitchValue on={Boolean(selectedFor('preferDefaultAudioTrack'))} t={t} />}
 					onSelect={togglePreferDefaultAudio}
 					t={t}
@@ -731,10 +731,10 @@ const SetupWizard = ({onDone, backHandlerRef}) => {
 			const width = cardWidthFor(5, 1, 110);
 			return (
 				<div className={css.optionRow}>
-					<OptionCard spotlightId='setup-card-detailStyle-v1' label={$L('Classic')} hint={$L('Everything centred in one stack.')} selected={selected === 'v1'} preview={<DetailStylePreview variant='v1' />} onSelect={() => pick('detailScreenStyle', 'v1')} width={width} t={t} /> {/* eslint-disable-line react/jsx-no-bind */}
+					<OptionCard spotlightId='setup-card-detailStyle-v1' label={$L('Classic')} hint={$L('Everything centered in one stack.')} selected={selected === 'v1'} preview={<DetailStylePreview variant='v1' />} onSelect={() => pick('detailScreenStyle', 'v1')} width={width} t={t} /> {/* eslint-disable-line react/jsx-no-bind */}
 					<OptionCard spotlightId='setup-card-detailStyle-v2' label={$L('Modern')} hint={$L('Cinematic, with tabs for cast and extras.')} selected={selected === 'v2'} preview={<DetailStylePreview variant='v2' />} onSelect={() => pick('detailScreenStyle', 'v2')} width={width} t={t} /> {/* eslint-disable-line react/jsx-no-bind */}
-					<OptionCard spotlightId='setup-card-detailStyle-v3' label={$L('Spotlight')} hint={$L('Artwork first, with cards that open what they name.')} selected={selected === 'v3'} preview={<DetailStylePreview variant='v3' />} onSelect={() => pick('detailScreenStyle', 'v3')} width={width} t={t} /> {/* eslint-disable-line react/jsx-no-bind */}
-					<OptionCard spotlightId='setup-card-detailStyle-v4' label={$L('Nouveau')} hint={$L('Every section stacked down one page.')} selected={selected === 'v4'} preview={<DetailStylePreview variant='v4' />} onSelect={() => pick('detailScreenStyle', 'v4')} width={width} t={t} /> {/* eslint-disable-line react/jsx-no-bind */}
+					<OptionCard spotlightId='setup-card-detailStyle-v3' label={$L('Spotlight')} hint={$L('Artwork takes center stage, with cards that open the corresponding content sections.')} selected={selected === 'v3'} preview={<DetailStylePreview variant='v3' />} onSelect={() => pick('detailScreenStyle', 'v3')} width={width} t={t} /> {/* eslint-disable-line react/jsx-no-bind */}
+					<OptionCard spotlightId='setup-card-detailStyle-v4' label={$L('Nouveau')} hint={$L('All sections arranged on one scrolling page.')} selected={selected === 'v4'} preview={<DetailStylePreview variant='v4' />} onSelect={() => pick('detailScreenStyle', 'v4')} width={width} t={t} /> {/* eslint-disable-line react/jsx-no-bind */}
 					<OptionCard spotlightId='setup-card-detailStyle-v5' label={$L('Minimalist')} hint={$L('Artwork, one play button and the episodes.')} selected={selected === 'v5'} preview={<DetailStylePreview variant='v5' />} onSelect={() => pick('detailScreenStyle', 'v5')} width={width} t={t} data-spot-right={NEXT_TARGET} /> {/* eslint-disable-line react/jsx-no-bind */}
 				</div>
 			);

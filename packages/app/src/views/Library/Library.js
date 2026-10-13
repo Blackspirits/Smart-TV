@@ -1556,7 +1556,7 @@ const Library = ({library, genreFilter, studioFilter, onSelectItem, onViewPhoto,
 							</SpottableButton>
 						))}
 
-						{renderSection('played', $L('Played Status'), chosenLabel(PLAYED_FILTERS, playedFilter), () => (
+						{renderSection('played', $L('Playback Status'), chosenLabel(PLAYED_FILTERS, playedFilter), () => (
 							PLAYED_FILTERS.map((option) => (
 								<SpottableButton
 									key={option.key}

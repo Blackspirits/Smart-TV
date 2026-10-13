@@ -8,7 +8,7 @@ describe('nouveauMetaPieces', () => {
 	});
 
 	it('counts seasons for a series and episodes for a season', () => {
-		expect(nouveauMetaPieces({item: {Type: 'Series'}, seasonCount: 4})).toContain('4 Seasons');
+		expect(nouveauMetaPieces({item: {Type: 'Series'}, seasonCount: 4})).toContain('4 seasons');
 		expect(nouveauMetaPieces({item: {Type: 'Season'}, episodeCount: 12})).toContain('12 Episodes');
 	});
 
@@ -43,7 +43,7 @@ describe('nouveauMetaPieces', () => {
 	// misleading sat next to the season count.
 	it('leaves the runtime off a series', () => {
 		expect(nouveauMetaPieces({item: {Type: 'Series'}, runtime: '24m', seasonCount: 2}))
-			.toEqual(['2 Seasons']);
+			.toEqual(['2 seasons']);
 	});
 
 	it('says when a season would finish, and only for a season', () => {

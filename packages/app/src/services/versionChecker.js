@@ -187,7 +187,7 @@ const fetchLatestRelease = async () => {
  * @returns {string} Markdown to render
  */
 export const formatReleaseNotes = (notes) => {
-	if (!notes) return $L('A new version is available. Visit GitHub to download.');
+	if (!notes) return $L('A new version is available. Visit GitHub to download it.');
 	return notes;
 };
 

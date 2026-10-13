@@ -531,7 +531,6 @@ export const getUiLanguageOptions = () => [
 	{ value: 'nl', label: 'Nederlands' },
 	{ value: 'nb', label: 'Norsk Bokmål' },
 	{ value: 'pl', label: 'Polski' },
-	{ value: 'pt', label: 'Português' },
 	{ value: 'pt-BR', label: 'Português (Brasil)' },
 	{ value: 'pt-PT', label: 'Português (Portugal)' },
 	{ value: 'ro', label: 'Română' },

@@ -7,11 +7,11 @@ import {getSupportedImageTypes, getCurrentTags} from './artworkTypes';
 const errorTemplate = (actionName) => {
 	switch (actionName) {
 		case 'download':
-			return $L('Image download failed: {err}');
+			return $L('Could not download the image: {err}');
 		case 'delete':
-			return $L('Image delete failed: {err}');
+			return $L('Could not delete the image: {err}');
 		case 'clear':
-			return $L('Clear artwork failed: {err}');
+			return $L('Could not clear the artwork: {err}');
 		default:
 			return $L('Action failed: {err}');
 	}
@@ -55,7 +55,7 @@ const useArtworkActions = ({open, resetKey, api, activeItem, refreshItemMetadata
 
 		if (isLocalMetadataEnabled) {
 			onWriteAccessError?.(
-				$L('Saving metadata locally is enabled for this library, but the server lacks write permissions to write files to the library folder.')
+				$L('This library is configured to save artwork in the media folders, but the server does not have write access to them.')
 			);
 		} else {
 			onMessage?.(errorTemplate(actionName).replace('{err}', error.message || error.toString()));

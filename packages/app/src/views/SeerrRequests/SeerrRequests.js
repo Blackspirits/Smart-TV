@@ -612,7 +612,7 @@ const SeerrRequests = ({onSelectItem, onClose, initialTab = 'requests', backHand
 		if (!isAuthenticated) {
 			return (
 				<Column align="center center" className={css.message}>
-					<BodyText>{$L('Please configure Seerr in Settings')}</BodyText>
+					<BodyText>{$L('Configure Seerr in Settings')}</BodyText>
 				</Column>
 			);
 		}

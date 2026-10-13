@@ -29,7 +29,7 @@ const DetailSectionsView = ({style, seerrAvailable, seerrLabel, hidden, onToggle
 	return (
 		<SettingsView spotlightId='detail-sections-view' title={$L('Sections')} clean>
 			<div className={`${css.editorHint} ${css.editorHintSolo}`}>
-				{$L('Only the sections the current Details screen style can show are listed. Hiding one hides it in every style that has it.')}
+				{$L('Only sections supported by the current details screen style are listed. Hiding a section hides it in every style that includes it.')}
 			</div>
 			{DETAIL_SECTION_GROUPS.map((group) => {
 				const sections = offered.filter((section) => section.group === group.id);

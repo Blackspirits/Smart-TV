@@ -631,7 +631,7 @@ const GamePlayer = ({library, game, startFresh, onBack, backHandlerRef}) => {
 					</>}
 				>
 					{options.length === 0 ? (
-						<div className={css.empty}>{$L('This core has no adjustable options.')}</div>
+						<div className={css.empty}>{$L('This emulator core has no adjustable options.')}</div>
 					) : options.map((opt, i) => (
 						<SettingRow
 							key={opt.id}

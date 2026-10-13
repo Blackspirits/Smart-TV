@@ -34,7 +34,7 @@ export const QualitySelectionPopup = memo(({open, title, hdStatus, status4k, can
 		<Popup open={open} onClose={onClose} position="center">
 			<div className={`${css.popupSurface} ${css.qualityPopupContent}`}>
 				<h2 className={css.qualityPopupTitle}>{$L('Request')} {title}</h2>
-				<p className={css.qualityPopupSubtitle}>{$L('Select quality to request')}</p>
+				<p className={css.qualityPopupSubtitle}>{$L('Select the quality to request')}</p>
 				<div className={css.qualityButtons}>
 					<Button
 						className={`${css.qualityButton} ${(!canRequestHd || quotaBlocked) ? css.qualityButtonDisabled : ''}`}

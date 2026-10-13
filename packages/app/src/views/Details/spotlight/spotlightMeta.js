@@ -25,7 +25,7 @@ export const spotlightMetaPieces = ({
 			case 'runtimeAndSeasons': {
 				const pieces = [];
 				if (item.Type === 'Series' && seasonCount) {
-					pieces.push({kind: 'text', text: $L('{count} Seasons').replace('{count}', seasonCount)});
+					pieces.push({kind: 'text', text: $L('{count} seasons').replace('{count}', seasonCount)});
 				}
 				if (item.Type === 'Season' && episodeCount) {
 					pieces.push({kind: 'text', text: $L('{count} Episodes').replace('{count}', episodeCount)});

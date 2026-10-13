@@ -11,7 +11,7 @@ describe('spotlightMetaPieces', () => {
 	});
 
 	it('counts seasons on a series and episodes on a season', () => {
-		expect(texts(spotlightMetaPieces({item: {Type: 'Series'}, seasonCount: 4}))).toEqual(['4 Seasons']);
+		expect(texts(spotlightMetaPieces({item: {Type: 'Series'}, seasonCount: 4}))).toEqual(['4 seasons']);
 		expect(texts(spotlightMetaPieces({item: {Type: 'Season'}, episodeCount: 10}))).toEqual(['10 Episodes']);
 	});
 

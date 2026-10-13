@@ -68,7 +68,7 @@ export const WriteAccessDialog = ({message, onDismiss}) => (
 		<h3 className={css.panelTitle}>{$L('Warning: No Write Access')}</h3>
 		<p className={css.panelMessage}>{message}</p>
 		<p className={css.panelTip}>
-			{$L('Make sure the media folders are writable by the Jellyfin system user on your host.')}
+			{$L('Make sure the user running Jellyfin on the server has write access to the media folders.')}
 		</p>
 		<SpottableButton className={css.btn} onClick={onDismiss} spotlightId="warning-dismiss-btn">
 			{$L('Dismiss')}

@@ -24,7 +24,7 @@ const SpottableButton = Spottable('button');
 
 const REPEAT_LABELS = {
 	RepeatNone: $L('Off'),
-	RepeatOne: $L('One'),
+	RepeatOne: $L('One item'),
 	RepeatAll: $L('All')
 };
 

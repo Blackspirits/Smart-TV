@@ -1,3 +1,4 @@
+import {BOOT_UI_LOCALE_KEY, normalizeUiLocale, normalizeUiLocaleSettings} from '../utils/uiLocale';
 import {createContext, useContext, useState, useEffect, useCallback, useMemo, useRef} from 'react';
 import {getFromStorage, saveToStorage} from '../services/storage';
 import {getMoonfinSettings, getMoonfinThemes, saveMoonfinProfile, moonfinPing} from '../services/seerrApi';
@@ -133,6 +134,11 @@ const POSTER_SIZES_FROM_SERVER = {medium: 'default', extraLarge: 'xlarge'};
 const posterSizeFromServer = oneOf(['small', 'default', 'large', 'xlarge', 'grandparents']).fromServer;
 
 const VALUE_CONVERSIONS = {
+	uiLanguage: {
+	 toServer: normalizeUiLocale,
+	 // Core's system choice should leave this client's explicit UI language alone.
+	 fromServer: v => v === 'system' ? undefined : normalizeUiLocale(v)
+	},
 	homeRowsPosterSize: {
 		toServer: v => POSTER_SIZES_TO_SERVER[v] || v,
 		fromServer: v => posterSizeFromServer(POSTER_SIZES_FROM_SERVER[v] || v)
@@ -552,10 +558,10 @@ const markServerSyncInitialized = async (serverUrl) => {
 // App boots before the async settings store loads, and on webOS that store is
 // DB8 which the reload after a language change beats. Mirror the language into
 // localStorage synchronously so the next boot reads the chosen one.
-const BOOT_LOCALE_KEY = 'moonfin_uiLanguage';
+
 const persistBootLocale = (locale) => {
 	try {
-		if (locale) window.localStorage?.setItem(BOOT_LOCALE_KEY, locale);
+		if (locale) window.localStorage?.setItem(BOOT_UI_LOCALE_KEY, normalizeUiLocale(locale));
 	} catch (e) {
 		void e;
 	}
@@ -757,7 +763,8 @@ export function SettingsProvider({children}) {
 					delete stored.liveTvDirect;
 					migrated = true;
 				}
-				const merged = {...defaultSettings, ...stored};
+				const merged = normalizeUiLocaleSettings({...defaultSettings, ...stored});
+				if (stored.uiLanguage && merged.uiLanguage !== stored.uiLanguage) migrated = true;
 				setSettings(merged);
 				if (migrated) saveToStorage('settings', merged);
 				// seed the boot key for anyone whose language only lived in the
@@ -837,6 +844,7 @@ export function SettingsProvider({children}) {
 	);
 
 	const updateSetting = useCallback((key, value) => {
+		if (key === 'uiLanguage') value = normalizeUiLocale(value);
 		if (key === 'uiLanguage') persistBootLocale(value);
 		noteAnsweredSettings([key]);
 		setSettings(prev => {
@@ -848,6 +856,7 @@ export function SettingsProvider({children}) {
 	}, []);
 
 	const updateSettings = useCallback((newSettings) => {
+		newSettings = normalizeUiLocaleSettings(newSettings);
 		if ('uiLanguage' in newSettings) persistBootLocale(newSettings.uiLanguage);
 		noteAnsweredSettings(Object.keys(newSettings));
 		setSettings(prev => {
@@ -892,7 +901,7 @@ export function SettingsProvider({children}) {
 				if (key in defaultSettings) updated[key] = defaultSettings[key];
 				else delete updated[key];
 			}
-			Object.assign(updated, resolved);
+			Object.assign(updated, normalizeUiLocaleSettings(resolved));
 			persistBootLocale(updated.uiLanguage);
 			saveToStorage('settings', updated);
 			return updated;
@@ -906,7 +915,7 @@ export function SettingsProvider({children}) {
 		dropQueuedPush();
 		noteAnsweredSettings(Object.keys(values));
 		setSettings(prev => {
-			const updated = {...prev, ...values};
+			const updated = {...prev, ...normalizeUiLocaleSettings(values)};
 			persistBootLocale(updated.uiLanguage);
 			saveToStorage('settings', updated);
 			return updated;

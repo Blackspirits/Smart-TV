@@ -41,7 +41,7 @@ export const fileSizeLine = (mediaSource) => {
 	const container = String(mediaSource?.Container || '').toUpperCase();
 	if (!size || !container) return null;
 
-	return $L('Size: {size}  •  Format: {format}')
+	return $L('Size: {size} • Format: {format}')
 		.replace('{size}', size)
 		.replace('{format}', container);
 };

@@ -64,7 +64,7 @@ const useArtworkItem = ({open, initialItem, api, onError}) => {
 					if (matchingReport) {
 						const libraryName = matchingReport.LibraryName || $L('Library');
 						setWriteAccessWarning(
-							$L('The server does not have write permissions for "{libraryName}" library path. Local artwork changes may fail to save.').replace('{libraryName}', libraryName)
+							$L('The server does not have write access to the media folder for "{libraryName}". Artwork changes may not be saved there.').replace('{libraryName}', libraryName)
 						);
 					}
 				}
