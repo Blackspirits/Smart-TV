@@ -5,6 +5,26 @@ Brazilian Portuguese in `packages/app/resources/pt-BR/strings.json`. The generic
 `pt` resource is a compatibility alias derived from European Portuguese, not a
 third translation to maintain.
 
+## Weblate setup
+
+Merging this change does not remove Portuguese (`pt`) from Weblate. The component
+scans `packages/app/resources/*/strings.json`, which still includes the
+compatibility file.
+
+A Weblate project administrator should exclude the exact `pt` code in the
+component's **Language filter**. With the default filter, use
+`^(?!pt$)[^.]+$`; if there are already custom exclusions, add `pt` to those
+instead. Keep `pt-PT` and `pt-BR` enabled.
+
+Preserve any useful translations or suggestions before retiring the existing
+generic Portuguese entry. If it remains listed after rescanning, lock or remove
+that translation in Weblate. Keep `resources/pt/strings.json` in Git: it is
+generated from `pt-PT` for compatibility and should not be translated separately.
+
+See the [Weblate language filter documentation](https://docs.weblate.org/en/latest/admin/projects.html#component-languagefilter).
+
+## Importing translations
+
 After importing translations from Weblate, run:
 
 ```sh
