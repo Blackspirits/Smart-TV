@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useReducer, useRef, useState} from 'react';
+import {useCallback, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState} from 'react';
 import {retainPermitted} from '../../services/libraryScope';
 import {isKidsMode, mergesContinueWatchingNextUp} from '../../utils/kidsMode';
 import {isLiveTvLibrary, librariesForNav} from '../../utils/liveTvLibrary';
@@ -45,6 +45,10 @@ const useBrowseData = ({
 	const [reloadKey, setReloadKey] = useState(0);
 
 	const cacheOwner = useMemo(() => ({serverUrl, userId}), [serverUrl, userId]);
+	const owner = useMemo(() => ({key: JSON.stringify([serverUrl, accessToken, userId])}), [serverUrl, accessToken, userId]);
+	const activeOwnerRef = useRef(owner);
+	activeOwnerRef.current = owner;
+	const isCurrentOwner = useCallback(() => activeOwnerRef.current === owner && memoryCache.owner === owner.key, [owner]);
 
 	const lastVolatileRefreshRef = useRef(0);
 
@@ -52,6 +56,7 @@ const useBrowseData = ({
 	settingsRef.current = settings;
 
 	const fetchFreshFeaturedItems = useCallback(async (fallbackItems = null) => {
+		if (!isCurrentOwner()) return null;
 		const s = settingsRef.current;
 		const configKey = featuredConfigKey(s, unifiedMode);
 		// The bar already holds a set for these settings, and a new random draw would only reshuffle it.
@@ -59,6 +64,7 @@ const useBrowseData = ({
 			return null;
 		}
 		const publish = (items) => {
+			if (!isCurrentOwner()) return;
 			memoryCache.featuredItems = items;
 			memoryCache.featuredConfigKey = configKey;
 			dispatch({type: 'SET_FEATURED_ITEMS', items});
@@ -67,6 +73,7 @@ const useBrowseData = ({
 		// The saved picks can name a library access has since been revoked for, so what the policy
 		// no longer allows is dropped before they are trusted.
 		const libraryIds = await retainPermitted(api, s.mediaBarLibraryIds || []);
+		if (!isCurrentOwner()) return null;
 		const collectionIds = s.mediaBarCollectionIds || [];
 		const hasSourceFilter = (sourceType === 'collection' && collectionIds.length > 0) || libraryIds.length > 0;
 
@@ -107,6 +114,7 @@ const useBrowseData = ({
 				}
 			}
 
+			if (!isCurrentOwner()) return null;
 			if (items.length > 0) {
 				const filteredItems = filterItemsByExcludedGenres(
 					items.filter(item => item.Type !== 'BoxSet'),
@@ -123,6 +131,7 @@ const useBrowseData = ({
 				return fallbackItems;
 			}
 		} catch (e) {
+			if (!isCurrentOwner()) return null;
 			console.warn('[Browse] Failed to fetch fresh featured items:', e);
 			if (fallbackItems && !hasSourceFilter) {
 				publish(fallbackItems);
@@ -130,9 +139,10 @@ const useBrowseData = ({
 			}
 		}
 		return null;
-	}, [api, serverUrl, accessToken, unifiedMode, getItemServerUrl]);
+	}, [api, serverUrl, accessToken, unifiedMode, getItemServerUrl, isCurrentOwner]);
 
 	const refreshVolatileData = useCallback(async (force = false) => {
+		if (!isCurrentOwner()) return;
 		if (!force && Date.now() - lastVolatileRefreshRef.current < VOLATILE_REFRESH_COOLDOWN_MS) return;
 		lastVolatileRefreshRef.current = Date.now();
 		try {
@@ -152,6 +162,7 @@ const useBrowseData = ({
 				]);
 			}
 
+			if (!isCurrentOwner()) return;
 			const volatileRows = [];
 
 			if (resumeItems.Items?.length > 0) {
@@ -184,7 +195,7 @@ const useBrowseData = ({
 		} catch (e) {
 			console.warn('[Browse] Background refresh failed:', e);
 		}
-	}, [api, unifiedMode, cacheOwner, settings.nextUpMaxDays]);
+	}, [api, unifiedMode, cacheOwner, settings.nextUpMaxDays, isCurrentOwner]);
 
 	// Signing in as someone else has to throw the rows away. Leaving the home screen and
 	// coming back must not, and it used to, because an effect runs when it first mounts
@@ -192,11 +203,15 @@ const useBrowseData = ({
 	// it is returned to. Comparing against who the rows belong to tells the two apart.
 	// The user is part of that, since a switch can bring the token and the user in
 	// separate renders, and rows read in between still belong to the previous user.
-	const owner = `${accessToken}:${userId}`;
-	useEffect(() => {
-		if (memoryCache.owner === owner) return;
-		clearMemoryCache();
-		memoryCache.owner = owner;
+	useLayoutEffect(() => {
+		activeOwnerRef.current = owner;
+		if (memoryCache.owner !== owner.key) {
+			clearMemoryCache();
+			memoryCache.owner = owner.key;
+			lastVolatileRefreshRef.current = 0;
+			dispatch({type: 'RESET_ACCOUNT_DATA'});
+		}
+		return () => { activeOwnerRef.current = null; };
 	}, [owner]);
 
 	useEffect(() => {
@@ -218,6 +233,7 @@ const useBrowseData = ({
 
 	useEffect(() => {
 		let cancelled = false;
+		const isActive = () => !cancelled && isCurrentOwner();
 
 		// Loading cant clear until the media bar has something, or the first focus lands
 		// on a row rather than on the bar. Items we already remember do that on the spot,
@@ -225,6 +241,7 @@ const useBrowseData = ({
 		// already in hand, and a fresh draw only follows if the media bar settings changed.
 		// With nothing remembered there is still nothing to show until the request answers.
 		const primeFeaturedItems = async (remembered, rememberedConfigKey) => {
+			if (!isActive()) return;
 			if (remembered?.length) {
 				// Records which settings the bar's items were drawn for.
 				memoryCache.featuredItems = remembered;
@@ -269,11 +286,13 @@ const useBrowseData = ({
 			if (memoryCache.rowConfigKey === rowConfigKey && memoryCache.rowData && memoryCache.libraries && memoryCache.featuredItems && isCacheValid(memoryCache.timestamp, CACHE_TTL_VOLATILE)) {
 				dispatch({type: 'SET_ROW_DATA', rowData: memoryCache.rowData});
 				await primeFeaturedItems(memoryCache.featuredItems, memoryCache.featuredConfigKey);
+				if (!isActive()) return;
 				dispatch({type: 'SET_LOADING', value: false});
 				return;
 			}
 
 			const persistedCache = await loadBrowseCache(cacheOwner.serverUrl, cacheOwner.userId);
+			if (!isActive()) return;
 			const hasValidPersistedCache = persistedCache &&
 				(persistedCache.rowConfigKey || 'per-library') === rowConfigKey &&
 				isCacheValid(persistedCache.timestamp, CACHE_TTL_LIBRARIES) &&
@@ -282,11 +301,12 @@ const useBrowseData = ({
 
 			if (hasValidPersistedCache) {
 				dispatch({type: 'SET_ROW_DATA', rowData: persistedCache.rowData});
-				await primeFeaturedItems(persistedCache.featuredItems, persistedCache.featuredConfigKey);
 				memoryCache.libraries = persistedCache.libraries;
 				memoryCache.rowData = persistedCache.rowData;
 				memoryCache.timestamp = persistedCache.timestamp;
 				memoryCache.rowConfigKey = rowConfigKey;
+				await primeFeaturedItems(persistedCache.featuredItems, persistedCache.featuredConfigKey);
+				if (!isActive()) return;
 				dispatch({type: 'SET_LOADING', value: false});
 
 				if (!isCacheValid(persistedCache.timestamp, CACHE_TTL_VOLATILE)) {
@@ -339,6 +359,7 @@ const useBrowseData = ({
 					recentlyPlayed = results[4];
 				}
 
+				if (!isActive()) return;
 				memoryCache.libraries = libs;
 
 				const latestItemsExcludes = userConfig?.Configuration?.LatestItemsExcludes || [];
@@ -422,6 +443,7 @@ const useBrowseData = ({
 				} else {
 					fetchFreshFeaturedItems();
 				}
+				if (!isActive()) return;
 				dispatch({type: 'SET_LOADING', value: false});
 
 				const eligibleLibraries = libs.filter(lib => {
@@ -443,6 +465,7 @@ const useBrowseData = ({
 						latestItemsExcludes,
 						EXCLUDED_COLLECTION_TYPES
 					);
+					if (!isActive()) return;
 					const newRows = [];
 					if (settings.mergeRecentRowsByType) {
 						const entries = latestResults
@@ -490,7 +513,7 @@ const useBrowseData = ({
 				}
 
 				const appendRows = (rows) => {
-					if (cancelled || rows.length === 0) return;
+					if (!isActive() || rows.length === 0) return;
 					dispatch({type: 'APPEND_ROWS', rows});
 					memoryCache.rowData = mergeRowsById(memoryCache.rowData || [], rows);
 					memoryCache.timestamp = Date.now();
@@ -511,14 +534,14 @@ const useBrowseData = ({
 					appendRows
 				});
 				const loaderSections = BROWSE_ROW_LOADERS.map(({sections}) => sections(loaderContext));
-				if (!cancelled) {
+				if (isActive()) {
 					dispatch({type: 'SET_PENDING_SECTIONS', sections: [].concat(...loaderSections)});
 				}
-				dispatch({type: 'SET_LOADING', value: false});
-				if (!cancelled) {
+				if (isActive()) dispatch({type: 'SET_LOADING', value: false});
+				if (isActive()) {
 					BROWSE_ROW_LOADERS.forEach(({load}, index) => {
 						const done = () => {
-							if (!cancelled) dispatch({type: 'SECTIONS_DONE', sections: loaderSections[index]});
+							if (isActive()) dispatch({type: 'SECTIONS_DONE', sections: loaderSections[index]});
 						};
 						Promise.resolve(load(loaderContext)).then(done, done);
 					});
@@ -527,7 +550,7 @@ const useBrowseData = ({
 			} catch (err) {
 				console.error('[Browse] Failed to load browse data:', err);
 			} finally {
-				dispatch({type: 'SET_LOADING', value: false});
+				if (isActive()) dispatch({type: 'SET_LOADING', value: false});
 			}
 		};
 
@@ -580,6 +603,7 @@ const useBrowseData = ({
 		settings.rewatchIncludeCollections,
 		settings.rewatchSortBy,
 		cacheOwner,
+		isCurrentOwner,
 		fetchFreshFeaturedItems,
 		unifiedMode,
 		getItemServerUrl,

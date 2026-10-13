@@ -1,4 +1,4 @@
-import {renderHook, waitFor} from '@testing-library/react';
+import {act, renderHook, waitFor} from '@testing-library/react';
 
 import useBrowseData from './useBrowseData';
 import {clearMemoryCache, loadBrowseCache, memoryCache} from './browseCache';
@@ -63,6 +63,12 @@ const cacheFor = (userId) => ({
 	timestamp: Date.now()
 });
 
+const deferred = () => {
+	let resolve;
+	const promise = new Promise((done) => { resolve = done; });
+	return {promise, resolve};
+};
+
 beforeEach(() => {
 	clearMemoryCache();
 	memoryCache.owner = null;
@@ -95,5 +101,114 @@ describe('switching users', () => {
 		const again = renderHook((p) => useBrowseData(p), {initialProps: props('token-a', 'user-a')}).result;
 		await waitFor(() => expect(again.current.allRowData).toEqual(previousUserRows));
 		expect(loadBrowseCache).not.toHaveBeenCalled();
+	});
+
+	test('clears rows and featured items while the new account cache is still loading', async () => {
+		const nextCache = deferred();
+		loadBrowseCache.mockImplementation((serverUrl, userId) => userId === 'user-a' ? Promise.resolve(cacheFor(userId)) : nextCache.promise);
+		const {result, rerender} = renderHook((p) => useBrowseData(p), {initialProps: props('token-a', 'user-a')});
+		await waitFor(() => expect(result.current.featuredItems).toEqual([{Id: 'featured'}]));
+
+		rerender(props('token-b', 'user-b'));
+		expect(result.current.allRowData).toEqual([]);
+		expect(result.current.featuredItems).toEqual([]);
+		expect(result.current.isLoading).toBe(true);
+		await act(async () => nextCache.resolve(null));
+		await waitFor(() => expect(result.current.isLoading).toBe(false));
+	});
+
+	test('ignores a stored cache response from the previous account', async () => {
+		const oldCache = deferred();
+		const newRows = [{id: 'resume', items: [{Id: 'mine'}]}];
+		loadBrowseCache.mockImplementation((serverUrl, userId) => userId === 'user-a' ? oldCache.promise : Promise.resolve({...cacheFor(userId), rowData: newRows}));
+		const {result, rerender} = renderHook((p) => useBrowseData(p), {initialProps: props('token-a', 'user-a')});
+		await waitFor(() => expect(loadBrowseCache).toHaveBeenCalledWith('http://server', 'user-a'));
+		rerender(props('token-b', 'user-b'));
+		await waitFor(() => expect(result.current.allRowData).toEqual(newRows));
+
+		await act(async () => oldCache.resolve(cacheFor('user-a')));
+		expect(result.current.allRowData).toEqual(newRows);
+		expect(memoryCache.rowData).toEqual(newRows);
+	});
+
+	test('a late server response cannot restore old rows or finish the new account load', async () => {
+		const oldLibraries = deferred();
+		const nextCache = deferred();
+		const getLibraries = jest.fn(() => oldLibraries.promise);
+		const oldApi = {...api, getLibraries, getResumeItems: async () => ({Items: [{Id: 'theirs'}]})};
+		loadBrowseCache.mockImplementation((serverUrl, userId) => userId === 'user-a' ? Promise.resolve(null) : nextCache.promise);
+		const {result, rerender} = renderHook((p) => useBrowseData(p), {initialProps: {...props('token-a', 'user-a'), api: oldApi}});
+		await waitFor(() => expect(getLibraries).toHaveBeenCalled());
+		rerender(props('token-b', 'user-b'));
+
+		await act(async () => oldLibraries.resolve({Items: [{Id: 'old-library'}]}));
+		expect(result.current.allRowData).toEqual([]);
+		expect(memoryCache.rowData).toBeNull();
+		expect(result.current.isLoading).toBe(true);
+		await act(async () => nextCache.resolve(null));
+		await waitFor(() => expect(result.current.isLoading).toBe(false));
+	});
+
+	test('ignores featured items fetched for the previous account', async () => {
+		const oldFeatured = deferred();
+		const random = jest.fn(() => oldFeatured.promise);
+		loadBrowseCache.mockResolvedValue(null);
+		const {result, rerender} = renderHook((p) => useBrowseData(p), {initialProps: {...props('token-a', 'user-a'), api: {...api, getRandomItems: random}}});
+		await waitFor(() => expect(random).toHaveBeenCalled());
+		rerender(props('token-b', 'user-b'));
+		await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+		await act(async () => oldFeatured.resolve({Items: [{Id: 'theirs', Type: 'Movie'}]}));
+		expect(result.current.featuredItems).toEqual([]);
+		expect(memoryCache.featuredItems).toBeNull();
+	});
+
+	test('does not reuse the memory cache when the server changes', async () => {
+		loadBrowseCache.mockImplementation(async (serverUrl, userId) => serverUrl === 'http://server' ? cacheFor(userId) : null);
+		const {result, rerender} = renderHook((p) => useBrowseData(p), {initialProps: props('token-a', 'user-a')});
+		await waitFor(() => expect(result.current.allRowData).toEqual(previousUserRows));
+		rerender({...props('token-a', 'user-a'), serverUrl: 'http://other-server'});
+		await waitFor(() => expect(result.current.isLoading).toBe(false));
+		expect(loadBrowseCache).toHaveBeenLastCalledWith('http://other-server', 'user-a');
+		expect(result.current.allRowData).toEqual([]);
+	});
+
+	test('ignores an earlier request even after switching back to the same account', async () => {
+		const firstCache = deferred();
+		const currentRows = [{id: 'resume', items: [{Id: 'current'}]}];
+		let visits = 0;
+		loadBrowseCache.mockImplementation((serverUrl, userId) => {
+			if (userId !== 'user-a') return Promise.resolve(null);
+			visits += 1;
+			return visits === 1 ? firstCache.promise : Promise.resolve({...cacheFor(userId), rowData: currentRows});
+		});
+		const {result, rerender} = renderHook((p) => useBrowseData(p), {initialProps: props('token-a', 'user-a')});
+		await waitFor(() => expect(visits).toBe(1));
+		rerender(props('token-b', 'user-b'));
+		await waitFor(() => expect(result.current.isLoading).toBe(false));
+		rerender(props('token-a', 'user-a'));
+		await waitFor(() => expect(result.current.allRowData).toEqual(currentRows));
+
+		await act(async () => firstCache.resolve(cacheFor('user-a')));
+		expect(result.current.allRowData).toEqual(currentRows);
+		expect(memoryCache.rowData).toEqual(currentRows);
+	});
+
+	test('ignores a background refresh from the previous account', async () => {
+		const oldResume = deferred();
+		loadBrowseCache.mockImplementation(async (serverUrl, userId) => userId === 'user-a' ? cacheFor(userId) : null);
+		const {result, rerender} = renderHook((p) => useBrowseData(p), {initialProps: {...props('token-a', 'user-a'), api: {...api, getResumeItems: () => oldResume.promise}}});
+		await waitFor(() => expect(result.current.allRowData).toEqual(previousUserRows));
+		let refresh;
+		act(() => { refresh = result.current.refreshVolatileData(true); });
+		rerender(props('token-b', 'user-b'));
+		await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+		await act(async () => {
+			oldResume.resolve({Items: [{Id: 'old-refresh'}]});
+			await refresh;
+		});
+		expect(result.current.allRowData).toEqual([]);
+		expect(memoryCache.rowData).toEqual([]);
 	});
 });

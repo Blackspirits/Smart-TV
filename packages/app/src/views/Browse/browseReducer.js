@@ -43,6 +43,8 @@ export function mergeRowsById (existingRows, incomingRows) {
 
 export default function browseReducer (state, action) {
 	switch (action.type) {
+		case 'RESET_ACCOUNT_DATA':
+			return {...browseInitialState, browseMode: state.browseMode};
 		case 'SET_INITIAL_DATA':
 			return {
 				...state,
